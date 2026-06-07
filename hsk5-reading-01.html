@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HSK 5급 독해수업 01 — 2026.06.06</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:#D0021B; --red-light:#FDECEA; --gold:#F5A623; --gold-light:#FFF8EC;
+      --bg:#F7F8FA; --surface:#FFFFFF; --border:#E4E7EB; --text:#1A1A2E; --muted:#6B7280;
+      --radius:12px; --shadow:0 2px 12px rgba(0,0,0,.08);
+    }
+    body { font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    header {
+      background:var(--red); color:#fff;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 28px; position:sticky; top:0; z-index:100;
+      box-shadow:0 2px 8px rgba(0,0,0,.2); flex-wrap:wrap; gap:10px;
+    }
+    header h1 { font-size:1.1rem; font-weight:700; }
+    header h1 span { opacity:.8; font-weight:400; font-size:.88rem; margin-left:8px; }
+    .header-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .level-badge { background:var(--gold); color:#1A1A2E; font-size:.78rem; font-weight:700; padding:4px 12px; border-radius:999px; }
+    .date-chip { background:rgba(255,255,255,.2); font-size:.82rem; padding:4px 12px; border-radius:8px; }
+    .back-btn { background:rgba(255,255,255,.15); color:#fff; font-size:.8rem; padding:5px 12px; border-radius:8px; text-decoration:none; border:1px solid rgba(255,255,255,.3); }
+    .back-btn:hover { background:rgba(255,255,255,.3); }
+
+    .main-wrap {
+      display:grid; grid-template-columns:300px 1fr; gap:18px;
+      padding:18px 22px; max-width:1600px; margin:0 auto; min-height:calc(100vh - 60px);
+    }
+
+    .left-panel { display:flex; flex-direction:column; gap:12px; }
+
+    .info-card { background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+    .info-card h3 { font-size:.75rem; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+    .info-row { display:flex; justify-content:space-between; font-size:.83rem; padding:5px 0; border-bottom:1px solid var(--border); }
+    .info-row:last-child { border-bottom:none; }
+    .info-row .lbl { color:var(--muted); }
+    .info-row .val { font-weight:600; }
+
+    .part-nav { display:flex; flex-direction:column; gap:7px; }
+    .part-btn {
+      display:flex; align-items:center; gap:10px;
+      background:var(--surface); border:1.5px solid var(--border);
+      border-radius:var(--radius); padding:10px 12px;
+      cursor:pointer; transition:all .2s; text-align:left;
+    }
+    .part-btn:hover { border-color:var(--red); background:var(--red-light); }
+    .part-btn.active { border-color:var(--red); background:var(--red-light); }
+    .part-icon { font-size:1.1rem; flex-shrink:0; }
+    .part-title { font-size:.85rem; font-weight:600; color:var(--text); }
+    .part-sub { font-size:.72rem; color:var(--muted); margin-top:1px; }
+
+    .progress-card { background:var(--surface); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); }
+    .progress-label { display:flex; justify-content:space-between; font-size:.8rem; color:var(--muted); margin-bottom:7px; }
+    .progress-bar-wrap { background:#EEF0F4; border-radius:999px; height:7px; overflow:hidden; }
+    .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--red),var(--gold)); border-radius:999px; transition:width .4s; }
+    .stat-row { display:flex; gap:8px; margin-top:10px; }
+    .stat-box { flex:1; text-align:center; background:var(--bg); border-radius:8px; padding:7px 4px; }
+    .stat-box .num { font-size:1.15rem; font-weight:800; color:var(--red); }
+    .stat-box .lbl2 { font-size:.65rem; color:var(--muted); margin-top:1px; }
+
+    .right-panel {
+      display:flex; flex-direction:column;
+      background:var(--surface); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .tab-bar { display:flex; background:#F0F2F5; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
+    .tab-btn {
+      flex-shrink:0; padding:12px 13px; font-size:.8rem; font-weight:600;
+      border:none; background:none; cursor:pointer; color:var(--muted);
+      transition:all .2s; border-bottom:3px solid transparent; white-space:nowrap;
+    }
+    .tab-btn:hover { color:var(--red); }
+    .tab-btn.active { color:var(--red); background:var(--surface); border-bottom-color:var(--red); }
+    .tab-btn .badge { font-size:.65rem; background:var(--gold); color:#fff; padding:1px 5px; border-radius:999px; margin-left:4px; }
+
+    .tab-content { flex:1; overflow-y:auto; padding:18px; display:none; }
+    .tab-content.active { display:block; }
+
+    .ctrl-row { display:flex; gap:7px; margin-bottom:14px; flex-wrap:wrap; }
+    .ctrl-btn {
+      padding:5px 12px; border-radius:8px; border:1.5px solid var(--border);
+      font-size:.78rem; cursor:pointer; background:var(--surface); font-weight:500; transition:all .2s;
+    }
+    .ctrl-btn:hover, .ctrl-btn.on { background:var(--red); color:#fff; border-color:var(--red); }
+
+    .part-label-h { font-size:.72rem; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:1px; margin:18px 0 10px; padding-bottom:5px; border-bottom:2px solid var(--red-light); }
+    .part-label-h:first-child { margin-top:0; }
+
+    .hint-box { background:var(--gold-light); border:1px solid rgba(245,166,35,.35); border-radius:8px; padding:9px 13px; margin-bottom:12px; font-size:.78rem; line-height:1.6; }
+    .hint-box strong { color:#b07d10; }
+
+    .passage-block { background:var(--bg); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; }
+    .pzh { font-size:.97rem; line-height:1.95; color:var(--text); }
+    .pko { font-size:.85rem; color:var(--muted); line-height:1.7; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); display:none; }
+    .passage-block.show-ko .pko { display:block; }
+    .blank-box { display:inline-block; background:var(--gold); color:#1A1A2E; font-weight:700; padding:1px 9px; border-radius:4px; margin:0 2px; }
+
+    .opts-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:10px; }
+    .opt { padding:4px 13px; border-radius:8px; border:1.5px solid var(--border); font-size:.83rem; background:var(--surface); }
+    .opt.ok { background:#F0FDF4; border-color:#16A34A; color:#16A34A; font-weight:700; }
+
+    .q-sep { height:1px; background:var(--border); margin:14px 0; }
+
+    /* Vocab */
+    .vm-btn { padding:5px 11px; border-radius:8px; border:1.5px solid var(--border); font-size:.78rem; cursor:pointer; background:var(--surface); font-weight:500; transition:all .2s; }
+    .vm-btn.active { background:var(--red); color:#fff; border-color:var(--red); }
+    .vc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:9px; }
+    .fc { perspective:1000px; cursor:pointer; height:115px; }
+    .fc-inner { position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+    .fc.flipped .fc-inner { transform:rotateY(180deg); }
+    .fc-f,.fc-b { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:var(--radius); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; text-align:center; box-shadow:var(--shadow); border:1.5px solid var(--border); }
+    .fc-f { background:var(--surface); }
+    .fc-b { background:var(--red); color:#fff; transform:rotateY(180deg); }
+    .fz { font-size:1.1rem; font-weight:700; }
+    .fp { font-size:.72rem; color:var(--muted); margin-top:3px; }
+    .fb { font-size:.82rem; font-weight:600; transform:rotateY(180deg); }
+    .fh { font-size:.65rem; margin-top:5px; opacity:.6; }
+    .ptag { display:inline-block; font-size:.62rem; font-weight:700; padding:1px 5px; border-radius:4px; margin-top:4px; }
+    .ptag.p1 { background:rgba(208,2,27,.1); color:var(--red); }
+    .ptag.p2 { background:rgba(43,155,232,.1); color:#2B9BE8; }
+    .ptag.p3 { background:rgba(108,99,255,.1); color:#6C63FF; }
+    .vt { width:100%; border-collapse:collapse; font-size:.87rem; }
+    .vt th { text-align:left; padding:8px 10px; background:var(--bg); font-size:.72rem; color:var(--muted); text-transform:uppercase; }
+    .vt td { padding:8px 10px; border-bottom:1px solid var(--border); }
+    .vt tr:hover td { background:var(--red-light); }
+    .vzh { font-weight:700; font-size:.92rem; }
+    .vp { color:var(--gold); font-size:.8rem; }
+
+    /* Quiz */
+    .quiz-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .quiz-hdr h3 { font-size:.97rem; font-weight:700; }
+    .qprog { font-size:.8rem; color:var(--muted); }
+    .qcard { background:var(--bg); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
+    .qnum { font-size:.72rem; color:var(--red); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+    .qpart { font-size:.7rem; color:var(--muted); margin-bottom:8px; }
+    .qtext { font-size:.93rem; font-weight:600; line-height:1.65; margin-bottom:13px; white-space:pre-line; }
+    .olist { display:flex; flex-direction:column; gap:6px; }
+    .obtn {
+      padding:9px 13px; border-radius:10px; border:1.5px solid var(--border);
+      background:var(--surface); cursor:pointer; text-align:left; font-size:.85rem;
+      transition:all .2s; display:flex; align-items:flex-start; gap:8px;
+    }
+    .obtn:hover { border-color:var(--red); background:var(--red-light); }
+    .obtn.correct { border-color:#16A34A; background:#F0FDF4; color:#16A34A; }
+    .obtn.wrong { border-color:var(--red); background:var(--red-light); color:var(--red); }
+    .oletter { width:23px; height:23px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; flex-shrink:0; margin-top:1px; }
+    .quiz-nav { display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+    .quiz-nav button { padding:8px 18px; border-radius:8px; border:none; cursor:pointer; font-size:.87rem; font-weight:600; transition:all .2s; }
+    .btn-p { background:var(--red); color:#fff; }
+    .btn-p:hover { background:#B30016; }
+    .btn-g { background:var(--bg); color:var(--muted); border:1.5px solid var(--border); }
+
+    /* Answers tab */
+    .ans-card { border-radius:var(--radius); border:1.5px solid var(--border); padding:14px 16px; margin-bottom:10px; transition:border-color .2s; }
+    .ans-card:hover { border-color:var(--red); }
+    .ans-qn { font-size:.72rem; font-weight:700; color:var(--red); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; }
+    .ans-correct { font-size:.97rem; font-weight:800; color:#16A34A; margin-bottom:7px; }
+    .ans-exp { font-size:.83rem; color:var(--muted); line-height:1.65; }
+    .ans-zh { font-size:.88rem; color:var(--text); line-height:1.75; margin-top:7px; background:var(--bg); border-radius:8px; padding:8px 10px; }
+
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:999px; }
+
+    @media (max-width:900px) {
+      .main-wrap { grid-template-columns:1fr; }
+      .left-panel { order:2; }
+      .right-panel { order:1; min-height:500px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📚 HSK 5급 독해수업 01 <span>리우HSK · 15기</span></h1>
+  <div class="header-right">
+    <span class="level-badge">HSK 5급</span>
+    <span class="date-chip">2026년 6월 6일 (금)</span>
+    <a href="index.html" class="back-btn">← 홈으로</a>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+  <!-- ===== LEFT ===== -->
+  <div class="left-panel">
+
+    <div class="info-card">
+      <h3>📋 학습 정보</h3>
+      <div class="info-row"><span class="lbl">과목</span><span class="val">HSK 5급 독해</span></div>
+      <div class="info-row"><span class="lbl">수업</span><span class="val">15기 독해수업 01</span></div>
+      <div class="info-row"><span class="lbl">구성</span><span class="val">1부분 · 2부분 · 3부분</span></div>
+      <div class="info-row"><span class="lbl">핵심 단어</span><span class="val">20개</span></div>
+      <div class="info-row"><span class="lbl">연습 문제</span><span class="val">9문항</span></div>
+    </div>
+
+    <div class="info-card">
+      <h3>🗂️ 파트 이동</h3>
+      <div class="part-nav">
+        <button class="part-btn active" data-tab="p1" onclick="switchTab('p1',this)">
+          <span class="part-icon">✏️</span>
+          <div><div class="part-title">독해1부분 · 빈칸 채우기</div><div class="part-sub">Q46-48 · 어휘 선택</div></div>
+        </button>
+        <button class="part-btn" data-tab="p2" onclick="switchTab('p2',this)">
+          <span class="part-icon">📖</span>
+          <div><div class="part-title">독해2부분 · 문장 이해</div><div class="part-sub">Q61-62 · 주제문 파악</div></div>
+        </button>
+        <button class="part-btn" data-tab="p3" onclick="switchTab('p3',this)">
+          <span class="part-icon">📄</span>
+          <div><div class="part-title">독해3부분 · 장문 독해</div><div class="part-sub">Q71-74 · 바이두 AI 연설</div></div>
+        </button>
+        <button class="part-btn" data-tab="vocab" onclick="switchTab('vocab',this)">
+          <span class="part-icon">📚</span>
+          <div><div class="part-title">단어 학습</div><div class="part-sub">20개 핵심 단어</div></div>
+        </button>
+        <button class="part-btn" data-tab="quiz" onclick="switchTab('quiz',this)">
+          <span class="part-icon">🎯</span>
+          <div><div class="part-title">연습문제</div><div class="part-sub">9문항 인터랙티브</div></div>
+        </button>
+        <button class="part-btn" data-tab="answers" onclick="switchTab('answers',this)">
+          <span class="part-icon">✅</span>
+          <div><div class="part-title">정답 &amp; 해설</div><div class="part-sub">전체 해설 확인</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-label"><span>학습 진도</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num">9</div><div class="lbl2">문항</div></div>
+        <div class="stat-box"><div class="num">20</div><div class="lbl2">단어</div></div>
+        <div class="stat-box"><div class="num">3</div><div class="lbl2">파트</div></div>
+        <div class="stat-box"><div class="num" id="scoreNum">-</div><div class="lbl2">점수</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== RIGHT ===== -->
+  <div class="right-panel">
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="p1" onclick="switchTab('p1',this)">✏️ 1부분</button>
+      <button class="tab-btn" data-tab="p2" onclick="switchTab('p2',this)">📖 2부분</button>
+      <button class="tab-btn" data-tab="p3" onclick="switchTab('p3',this)">📄 3부분</button>
+      <button class="tab-btn" data-tab="vocab" onclick="switchTab('vocab',this)">📚 단어 <span class="badge">20</span></button>
+      <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz',this)">🎯 연습문제 <span class="badge">9</span></button>
+      <button class="tab-btn" data-tab="answers" onclick="switchTab('answers',this)">✅ 정답·해설</button>
+    </div>
+
+    <!-- ===== TAB: PART 1 ===== -->
+    <div class="tab-content active" id="tab-p1">
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="toggleBlock('p1blk',this)">한국어 번역 토글</button>
+      </div>
+      <div class="hint-box"><strong>💡 힌트 단어:</strong> 放大镜 확대경 | 缩小 축소하다 | 苛求 가혹하게 요구하다 | 消耗能量 에너지를 소모하다 | 发自内心 마음에서 우러나오다 | 跨出第一步 첫걸음을 내딛다</div>
+
+      <div class="part-label-h">독해1부분 [46–48] — 빈칸 채우기</div>
+      <div class="passage-block" id="p1blk">
+        <div class="pzh">
+          许多人总是用放大镜看自己的缺点，却用缩小的镜头看自己的优势，这种妄自菲薄的做法无异于自寻烦恼。我们要明白，每个人都不可能是 <span class="blank-box">46. 完美</span> 的，"金无足赤，人无完人"才是生活的常态。一味苛求自己只会消耗内心的能量。真正聪明的人会发自内心接受自己的不足，并学会充分 <span class="blank-box">47. 发挥</span> 自己的优势，这样才能变得越来越好。<br/><br/>
+          此外，当面对未知的领域或全新挑战时，千万不要 <span class="blank-box">48. 轻易</span> 否定自己。你应该打破内心的恐惧，勇敢跨出第一步，大胆去尝试，为自己创造更多可能。
+        </div>
+        <div class="pko">
+          많은 사람들이 항상 돋보기로 자신의 단점을 보고, 반면에 축소 렌즈로 자신의 강점을 보는데, 스스로를 함부로 비하하는 이런 행동은 스스로 걱정거리를 만드는 것과 다를 바 없다. 우리는 모든 사람이 <strong>46. 완벽(完美)</strong>할 수 없으며, '금에 순금이 없듯이 완전무결한 사람도 없다'는 것이 삶의 일반적인 모습임을 알아야 한다. 무턱대고 자신에게 지나치게 요구하는 건 내면의 에너지만 소모할 뿐이다. 정말로 현명한 사람은 자신의 부족함을 진심으로 받아들이고 자신의 강점을 충분히 <strong>47. 발휘(发挥)</strong>하는 법을 배워야만 점점 더 나아질 수 있다.<br/><br/>
+          이 밖에, 미지의 영역이나 완전히 새로운 도전에 직면했을 때, 절대 <strong>48. 함부로(轻易)</strong> 자신을 부정하지 마라. 당신은 내면의 두려움을 깨고 용감하게 첫걸음을 내딛고 대담하게 시도해서 자신을 위해 더 많은 가능성을 만들어 내야 한다.
+        </div>
+      </div>
+
+      <div class="part-label-h">선택지 및 정답</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">46. 每个人都不可能是 ____ 的</div>
+          <div class="opts-row">
+            <span class="opt">A 突出 두드러지다</span>
+            <span class="opt">B 天真 천진하다</span>
+            <span class="opt">C 伟大 위대하다</span>
+            <span class="opt ok">D 完美 완벽하다 ✓</span>
+          </div>
+        </div>
+        <div class="q-sep"></div>
+        <div>
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">47. 学会充分 ____ 自己的优势</div>
+          <div class="opts-row">
+            <span class="opt">A 展开 전개하다</span>
+            <span class="opt ok">B 发挥 발휘하다 ✓</span>
+            <span class="opt">C 启发 일깨우다</span>
+            <span class="opt">D 推广 보급하다</span>
+          </div>
+        </div>
+        <div class="q-sep"></div>
+        <div>
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">48. 千万不要 ____ 否定自己</div>
+          <div class="opts-row">
+            <span class="opt">A 自动 자동으로</span>
+            <span class="opt">B 反复 반복해서</span>
+            <span class="opt ok">C 轻易 함부로 ✓</span>
+            <span class="opt">D 绝对 절대로</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PART 2 ===== -->
+    <div class="tab-content" id="tab-p2">
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="toggleBlock('p2a',this)">61번 번역 토글</button>
+        <button class="ctrl-btn" onclick="toggleBlock('p2b',this)">62번 번역 토글</button>
+        <button class="ctrl-btn" onclick="toggleAllBlocks(['p2a','p2b'],true)">전체 번역 보기</button>
+        <button class="ctrl-btn" onclick="toggleAllBlocks(['p2a','p2b'],false)">번역 숨기기</button>
+      </div>
+      <div class="hint-box"><strong>💡 힌트 단어:</strong> 伴随 수반하다 | 进入梦境 꿈속으로 들어가다 | 困扰 괴롭히다 | 招聘会场 채용 박람회장 | 社交媒体 소셜 미디어 | 集散地 허브</div>
+
+      <div class="part-label-h">독해2부분 — 지문과 주제 파악</div>
+
+      <div class="passage-block" id="p2a">
+        <div style="font-size:.72rem;font-weight:700;color:var(--red);margin-bottom:8px;">61번</div>
+        <div class="pzh">如果你做的梦伴随着各种情绪，那这就是有意义的梦，这种梦的内容往往与我们醒着时未能解决的问题有关。这些问题进入到我们的梦境中，被再一次加工、处理，但不会带给我们困扰或压力。</div>
+        <div class="pko">만약 당신이 꾼 꿈이 각종 감정을 수반하고 있다면, 그것은 곧 의미가 있는 꿈이며, 이런 꿈의 내용은 우리가 깨어 있을 때 해결하지 못한 문제와 종종 관계가 있다. 이 문제들이 우리의 꿈속으로 들어가서 재차 가공되고 처리되지만, 우리에게 괴로움이나 스트레스를 가져다주지는 않는다.</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:.75rem;font-weight:700;color:#16A34A;margin-bottom:7px;">정답: C — 带情绪的梦是有意义的 (감정을 수반하는 꿈은 의미가 있다)</div>
+          <div class="opts-row">
+            <span class="opt">A 多梦的人一般睡不好</span>
+            <span class="opt">B 梦的内容与现实无关</span>
+            <span class="opt ok">C 带情绪的梦是有意义的 ✓</span>
+            <span class="opt">D 做梦是缺乏自信的表现</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="passage-block" id="p2b">
+        <div style="font-size:.72rem;font-weight:700;color:var(--red);margin-bottom:8px;">62번</div>
+        <div class="pzh">如今，很多求职者不再去拥挤的招聘会场投递纸质简历，而是选择更方便快捷的方式，即通过各类社交媒体"刷"工作。微博、微信等平台成为求职和招聘信息的"集散地"，有的人也许刷刷朋友圈就能找到一份合适的工作。</div>
+        <div class="pko">오늘날, 많은 구직자들이 더 이상 혼잡한 채용 박람회장에 가서 종이 이력서를 제출하지 않고, 더 편리하고 빠른 방식을 선택하는데, 즉 여러 소셜 미디어를 통해서 일자리를 '훑어본다'는 것이다. 웨이보, 위챗 등의 플랫폼이 구직과 채용 정보의 '허브'가 되면서, 누군가는 위챗 모멘트를 좀 훑어보면 적합한 일자리를 찾을 수 있을지 모른다.</div>
+        <div style="margin-top:12px;">
+          <div style="font-size:.75rem;font-weight:700;color:#16A34A;margin-bottom:7px;">정답: C — 许多人不再用传统方式求职 (많은 사람들이 더 이상 전통 방식으로 구직하지 않는다)</div>
+          <div class="opts-row">
+            <span class="opt">A 要注意保护个人信息</span>
+            <span class="opt">B 网上的招聘广告不可靠</span>
+            <span class="opt ok">C 许多人不再用传统方式求职 ✓</span>
+            <span class="opt">D 投递纸质简历更容易被录用</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: PART 3 ===== -->
+    <div class="tab-content" id="tab-p3">
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="toggleBlock('p3blk',this)">한국어 번역 토글</button>
+      </div>
+      <div class="hint-box"><strong>💡 힌트 단어:</strong> 人工智能 인공지능 | 误区 잘못된 부분 | 机器 기계(=机械) | 替代 대체하다 | 仿生学 생체공학 | 算法 알고리즘 | 模仿 모방하다</div>
+
+      <div class="part-label-h">독해3부분 [71–74] — 바이두 창립자 리옌홍의 AI 연설</div>
+      <div class="passage-block" id="p3blk">
+        <div class="pzh">
+          日前，百度创始人李彦宏发表了题为《智慧城市的AI新思维》主题演讲，他表示，如今大家都意识到了人工智能对我们每个人的重要影响，然而人工智能作为一项新事物，大家对它的认识还存在不少误区。<br/><br/>
+          李彦宏指出，第一个误区是人工智能没必要一定像人，我们的精力不应该花在怎么去造出一个像人的机器上，让机器学会走路、跑步、上下楼梯，这是机械时代的思维。让机器从体力上替代人，这个问题我们在工业化时代就已经解决了。我们现在要解决的是让机器能够像人一样思考。<br/><br/>
+          第二个误区，李彦宏认为，通过研究人脑工作来让机器像人一样思考是行不通的。人工智能不是仿生学，现在的人工智能技术是各种各样的算法，这些跟人脑的工作原理其实没有太大关系。目前我们还没搞清人脑是怎样工作的，所以更谈不上用机器来模仿人脑的工作原理。因而人工智能不是要去模仿人脑的工作原理，而是要用机器的方式实现人脑能够实现的价值或作用。
+        </div>
+        <div class="pko">
+          며칠 전, 바이두의 창립자 리옌홍은 〈스마트도시의 AI 신사고〉라는 제목으로 주제 연설을 했다. 현재 모든 사람이 인공 지능이 우리 모두에게 끼치는 중요한 영향력을 깨달았지만, 인공 지능은 새로운 것으로서 그것에 대한 모두의 인식에 여전히 잘못된 부분이 있다고 밝혔다.<br/><br/>
+          리옌홍이 설명하길, 첫 번째 잘못된 부분은 인공 지능이 반드시 인간과 같을 필요가 없다는 것이다. 우리의 에너지는 어떻게 인간을 닮은 기계를 만들어 낼 것인가에 소모해선 안 된다. 기계가 걷고, 달리고, 계단을 오르내리는 걸 습득하도록 하는 것은 기계화 시대의 사고이다. 기계가 체력적으로 인간을 대체하도록 하는 것은 우리가 공업화 시대에 이미 해결한 문제이다. 우리가 현재 해결해야 하는 것은 기계가 인간처럼 사고할 수 있도록 하는 것이다.<br/><br/>
+          두 번째 잘못된 부분은, 인간의 뇌 작동 연구를 통해서 기계가 인간처럼 사고하도록 하는 것은 불가능하다는 점이다. 인공 지능은 생체공학이 아니고, 현재의 인공 지능 기술은 각종 알고리즘인데 이것들은 인간 뇌의 작동 원리와 사실 그리 큰 관계가 없다. 오늘날 우리는 인간의 뇌가 어떻게 작동하는지 아직 잘 모르고, 그래서 기계로 인간 뇌의 작동 원리를 모방하는 것은 더욱 말할 나위가 못된다. 따라서 인공 지능은 인간 뇌의 작동 원리를 모방하려는 것이 아니라, 기계의 방식으로 인간의 뇌가 실현할 수 있는 가치나 역할을 실현하려는 것이다.
+        </div>
+      </div>
+
+      <div class="part-label-h">문제 (71–74)</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="passage-block">
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">71. 根据第一段，李彦宏的演讲提到了什么？</div>
+          <div class="opts-row"><span class="opt ok">A 人工智能的影响 ✓</span><span class="opt">B 人工智能的缺点</span><span class="opt">C 人类如何战胜机器人</span><span class="opt">D 人工智能非新生事物</span></div>
+        </div>
+        <div class="passage-block">
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">72. 第二段中"这个问题"指的是？</div>
+          <div class="opts-row"><span class="opt">A 机器人长得像人</span><span class="opt ok">B 机器代替人的体力 ✓</span><span class="opt">C 现在的机器人功能单一</span><span class="opt">D 人工智能如何在工厂应用</span></div>
+        </div>
+        <div class="passage-block">
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">73. 下列哪项是李彦宏的观点？</div>
+          <div class="opts-row"><span class="opt">A 机器人可模仿人脑</span><span class="opt">B 人类不需要担心机器人</span><span class="opt ok">C 人脑如何工作还没弄明白 ✓</span><span class="opt">D 机器人首先要解决长相问题</span></div>
+        </div>
+        <div class="passage-block">
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">74. 上文主要谈的是？</div>
+          <div class="opts-row"><span class="opt">A 人工智能的发展趋势</span><span class="opt">B 中国制造业面临的问题</span><span class="opt">C 如何让机器像人一样工作</span><span class="opt ok">D 人们对人工智能的错误认识 ✓</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: VOCAB ===== -->
+    <div class="tab-content" id="tab-vocab">
+      <div class="ctrl-row">
+        <button class="vm-btn active" onclick="setVM('card',this)">🃏 플래시카드</button>
+        <button class="vm-btn" onclick="setVM('list',this)">📋 목록 보기</button>
+      </div>
+
+      <div id="vm-card">
+        <div class="vc-grid">
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">妄自菲薄</div><div class="fp">wàngzìfěibó</div><span class="ptag p1">1부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">스스로를 함부로 비하하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">无异于</div><div class="fp">wúyì yú</div><span class="ptag p1">1부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">~와 다를 바 없다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">苛求</div><div class="fp">kēqiú</div><span class="ptag p1">1부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">가혹하게 요구하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">发自内心</div><div class="fp">fāzì nèixīn</div><span class="ptag p1">1부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">마음에서 우러나오다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">完美 ★</div><div class="fp">wánměi</div><span class="ptag p1">1부분 정답46</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">완벽하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">发挥 ★</div><div class="fp">fāhuī</div><span class="ptag p1">1부분 정답47</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">발휘하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">轻易 ★</div><div class="fp">qīngyì</div><span class="ptag p1">1부분 정답48</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">함부로, 쉽사리</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">伴随</div><div class="fp">bànsuí</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">수반하다, 동반하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">梦境</div><div class="fp">mèngjìng</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">꿈속, 꿈나라</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">困扰</div><div class="fp">kùnrǎo</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">괴롭히다, 귀찮게 굴다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">求职者</div><div class="fp">qiúzhízhě</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">구직자</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">社交媒体</div><div class="fp">shèjiāo méitǐ</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">소셜 미디어</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">集散地</div><div class="fp">jísàndì</div><span class="ptag p2">2부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">허브, 집산지</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">误区</div><div class="fp">wùqū</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">잘못된 부분, 오해</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">人工智能</div><div class="fp">réngōng zhìnéng</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">인공지능 (AI)</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">仿生学</div><div class="fp">fǎngshēngxué</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">생체공학</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">算法</div><div class="fp">suànfǎ</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">알고리즘</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">替代</div><div class="fp">tìdài</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">대체하다, 대신하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">模仿</div><div class="fp">mófǎng</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">모방하다</div></div></div></div>
+          <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-f"><div class="fz">行不通</div><div class="fp">xíngbutōng</div><span class="ptag p3">3부분</span><div class="fh">탭하면 뜻 확인 ↩</div></div><div class="fc-b"><div class="fb">불가능하다, 안 된다</div></div></div></div>
+        </div>
+      </div>
+
+      <div id="vm-list" style="display:none">
+        <table class="vt">
+          <thead><tr><th>단어</th><th>병음</th><th>의미</th></tr></thead>
+          <tbody>
+            <tr><td class="vzh">妄自菲薄 <span class="ptag p1">1부</span></td><td class="vp">wàngzìfěibó</td><td>스스로를 함부로 비하하다</td></tr>
+            <tr><td class="vzh">无异于 <span class="ptag p1">1부</span></td><td class="vp">wúyì yú</td><td>~와 다를 바 없다</td></tr>
+            <tr><td class="vzh">苛求 <span class="ptag p1">1부</span></td><td class="vp">kēqiú</td><td>가혹하게 요구하다</td></tr>
+            <tr><td class="vzh">发自内心 <span class="ptag p1">1부</span></td><td class="vp">fāzì nèixīn</td><td>마음에서 우러나오다</td></tr>
+            <tr><td class="vzh">完美 ★ <span class="ptag p1">정답46</span></td><td class="vp">wánměi</td><td>완벽하다</td></tr>
+            <tr><td class="vzh">发挥 ★ <span class="ptag p1">정답47</span></td><td class="vp">fāhuī</td><td>발휘하다</td></tr>
+            <tr><td class="vzh">轻易 ★ <span class="ptag p1">정답48</span></td><td class="vp">qīngyì</td><td>함부로, 쉽사리</td></tr>
+            <tr><td class="vzh">伴随 <span class="ptag p2">2부</span></td><td class="vp">bànsuí</td><td>수반하다, 동반하다</td></tr>
+            <tr><td class="vzh">梦境 <span class="ptag p2">2부</span></td><td class="vp">mèngjìng</td><td>꿈속, 꿈나라</td></tr>
+            <tr><td class="vzh">困扰 <span class="ptag p2">2부</span></td><td class="vp">kùnrǎo</td><td>괴롭히다</td></tr>
+            <tr><td class="vzh">求职者 <span class="ptag p2">2부</span></td><td class="vp">qiúzhízhě</td><td>구직자</td></tr>
+            <tr><td class="vzh">社交媒体 <span class="ptag p2">2부</span></td><td class="vp">shèjiāo méitǐ</td><td>소셜 미디어</td></tr>
+            <tr><td class="vzh">集散地 <span class="ptag p2">2부</span></td><td class="vp">jísàndì</td><td>허브, 집산지</td></tr>
+            <tr><td class="vzh">误区 <span class="ptag p3">3부</span></td><td class="vp">wùqū</td><td>잘못된 부분, 오해</td></tr>
+            <tr><td class="vzh">人工智能 <span class="ptag p3">3부</span></td><td class="vp">réngōng zhìnéng</td><td>인공지능 (AI)</td></tr>
+            <tr><td class="vzh">仿生学 <span class="ptag p3">3부</span></td><td class="vp">fǎngshēngxué</td><td>생체공학</td></tr>
+            <tr><td class="vzh">算法 <span class="ptag p3">3부</span></td><td class="vp">suànfǎ</td><td>알고리즘</td></tr>
+            <tr><td class="vzh">替代 <span class="ptag p3">3부</span></td><td class="vp">tìdài</td><td>대체하다, 대신하다</td></tr>
+            <tr><td class="vzh">模仿 <span class="ptag p3">3부</span></td><td class="vp">mófǎng</td><td>모방하다</td></tr>
+            <tr><td class="vzh">行不通 <span class="ptag p3">3부</span></td><td class="vp">xíngbutōng</td><td>불가능하다, 안 된다</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TAB: QUIZ ===== -->
+    <div class="tab-content" id="tab-quiz">
+      <div class="quiz-hdr">
+        <h3>HSK 형식 연습문제</h3>
+        <span class="qprog" id="qprog">1 / 9 문항</span>
+      </div>
+      <div id="quiz-container">
+        <div class="qcard quiz-q" id="qq1">
+          <div class="qnum">Q1 · 독해1부분</div>
+          <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
+          <div class="qtext">每个人都不可能是 ____ 的，"金无足赤，人无完人"才是生活的常态。</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>突出 (두드러지다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>天真 (천진하다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>伟大 (위대하다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>完美 (완벽하다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq2" style="display:none">
+          <div class="qnum">Q2 · 독해1부분</div>
+          <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
+          <div class="qtext">真正聪明的人会发自内心接受自己的不足，并学会充分 ____ 自己的优势。</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>展开 (전개하다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>发挥 (발휘하다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>启发 (일깨우다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>推广 (보급하다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq3" style="display:none">
+          <div class="qnum">Q3 · 독해1부분</div>
+          <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
+          <div class="qtext">当面对未知的领域或全新挑战时，千万不要 ____ 否定自己。</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>自动 (자동으로)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>反复 (반복해서)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>轻易 (함부로)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>绝对 (절대로)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq4" style="display:none">
+          <div class="qnum">Q4 · 독해2부분</div>
+          <div class="qpart">지문의 내용과 일치하는 것을 고르세요</div>
+          <div class="qtext">如果你做的梦伴随着各种情绪，那这就是有意义的梦，这种梦的内容往往与我们醒着时未能解决的问题有关。这些问题进入到我们的梦境中，被再一次加工、处理，但不会带给我们困扰或压力。</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>多梦的人一般睡不好 (꿈을 많이 꾸면 잠을 잘 못 잔다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>梦的内容与现实无关 (꿈의 내용은 현실과 무관하다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>带情绪的梦是有意义的 (감정을 수반하는 꿈은 의미가 있다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>做梦是缺乏自信的表现 (꿈을 꾸는 건 자신감 부족의 표현이다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq5" style="display:none">
+          <div class="qnum">Q5 · 독해2부분</div>
+          <div class="qpart">지문의 내용과 일치하는 것을 고르세요</div>
+          <div class="qtext">如今，很多求职者不再去拥挤的招聘会场投递纸质简历，而是选择更方便快捷的方式，即通过各类社交媒体"刷"工作。微博、微信等平台成为求职和招聘信息的"集散地"，有的人也许刷刷朋友圈就能找到一份合适的工作。</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>要注意保护个人信息 (개인 정보 보호에 주의해야 한다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>网上的招聘广告不可靠 (인터넷 구인 광고는 믿을 만하지 않다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>许多人不再用传统方式求职 (많은 사람들이 더 이상 전통 방식으로 구직하지 않는다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>投递纸质简历更容易被录用 (종이 이력서를 제출하면 더 쉽게 채용된다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq6" style="display:none">
+          <div class="qnum">Q6 · 독해3부분 (71번)</div>
+          <div class="qpart">根据第一段，李彦宏的演讲提到了什么？</div>
+          <div class="qtext">첫 번째 단락에 따르면, 리옌홍의 연설에서 언급한 것은?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">A</span>人工智能的影响 (인공지능이 끼친 영향)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人工智能的缺点 (인공지능의 단점)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>人类如何战胜机器人 (인류가 어떻게 로봇을 이기는가)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能非新生事物 (인공지능은 새로운 것이 아니다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq7" style="display:none">
+          <div class="qnum">Q7 · 독해3부분 (72번)</div>
+          <div class="qpart">第二段中"这个问题"指的是？</div>
+          <div class="qtext">두 번째 단락의 "이 문제(这个问题)"가 가리키는 것은?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人长得像人 (로봇이 인간을 닮았다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>机器代替人的体力 (기계가 인간의 체력을 대체한다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>现在的机器人功能单一 (현재 로봇의 기능이 단일하다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能如何在工厂应用 (인공지능이 어떻게 공장에서 활용되는가)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq8" style="display:none">
+          <div class="qnum">Q8 · 독해3부분 (73번)</div>
+          <div class="qpart">下列哪项是李彦宏的观点？</div>
+          <div class="qtext">다음 중 리옌홍의 관점은?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人可模仿人脑 (로봇은 인간의 뇌를 모방할 수 있다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人类不需要担心机器人 (인류는 로봇을 걱정할 필요 없다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>人脑如何工作还没弄明白 (인간의 뇌가 어떻게 작동하는지 아직 파악 못했다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>机器人首先要解决长相问题 (로봇은 우선 생김새 문제를 해결해야 한다)</button>
+          </div>
+        </div>
+        <div class="qcard quiz-q" id="qq9" style="display:none">
+          <div class="qnum">Q9 · 독해3부분 (74번)</div>
+          <div class="qpart">上文主要谈的是？</div>
+          <div class="qtext">윗글에서 주로 말하는 것은?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>人工智能的发展趋势 (인공지능의 발전 추세)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>中国制造业面临的问题 (중국 제조업이 직면한 문제)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>如何让机器像人一样工作 (어떻게 기계를 인간처럼 일하게 하는가)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>人们对人工智能的错误认识 (인공지능에 대한 사람들의 잘못된 인식)</button>
+          </div>
+        </div>
+      </div>
+      <div id="quiz-result" style="display:none;text-align:center;padding:40px 20px;">
+        <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+        <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:8px;">학습 완료!</h3>
+        <p style="color:var(--muted);margin-bottom:16px;">오늘의 연습문제를 모두 풀었습니다.</p>
+        <div style="font-size:2.2rem;font-weight:900;color:var(--red);" id="scoreDisp">9 / 9</div>
+        <p style="color:var(--muted);font-size:.85rem;margin-top:4px;">정답</p>
+        <button class="btn-p" style="margin-top:20px;padding:11px 28px;border-radius:10px;" onclick="resetQuiz()">다시 풀기</button>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn-g" onclick="prevQ()" id="btnPrev" style="display:none">← 이전</button>
+        <button class="btn-p" onclick="nextQ()" id="btnNext" style="display:none">다음 →</button>
+      </div>
+    </div>
+
+    <!-- ===== TAB: ANSWERS ===== -->
+    <div class="tab-content" id="tab-answers">
+      <div class="part-label-h">독해1부분 정답 · 해설</div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q46 정답: D 完美</div>
+        <div class="ans-correct">D 完美 (완벽하다)</div>
+        <div class="ans-exp">"金无足赤，人无完人" — 앞 문장에서 '완전한 금이 없듯이 완벽한 사람도 없다'는 속담이 이어지므로, 빈칸에는 '완벽하다'는 의미의 完美가 적합합니다.</div>
+        <div class="ans-zh">A 突出(두드러지다) · B 天真(천진하다) · C 伟大(위대하다) · <strong>D 完美(완벽하다) ✓</strong></div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q47 정답: B 发挥</div>
+        <div class="ans-correct">B 发挥 (발휘하다)</div>
+        <div class="ans-exp">"充分发挥自己的优势(자신의 강점을 충분히 발휘하다)"는 고정 표현입니다. 展开는 토론·지도 등을 펼칠 때, 启发는 깨우침을 줄 때, 推广는 보급할 때 씁니다.</div>
+        <div class="ans-zh">A 展开(전개하다) · <strong>B 发挥(발휘하다) ✓</strong> · C 启发(일깨우다) · D 推广(보급하다)</div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q48 정답: C 轻易</div>
+        <div class="ans-correct">C 轻易 (함부로, 쉽사리)</div>
+        <div class="ans-exp">"千万不要轻易否定自己(절대 함부로 자신을 부정하지 마라)"에서 轻易는 '쉽사리, 경솔하게'의 의미로 쓰입니다. 绝对는 '절대로'이지만 千万과 의미가 겹쳐 어색합니다.</div>
+        <div class="ans-zh">A 自动(자동으로) · B 反复(반복해서) · <strong>C 轻易(함부로) ✓</strong> · D 绝对(절대로)</div>
+      </div>
+
+      <div class="part-label-h">독해2부분 정답 · 해설</div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q61 정답: C</div>
+        <div class="ans-correct">C 带情绪的梦是有意义的 (감정을 수반하는 꿈은 의미가 있다)</div>
+        <div class="ans-exp">지문의 첫 문장 "如果你做的梦伴随着各种情绪，那这就是有意义的梦"에서 정답을 직접 확인할 수 있습니다. A는 언급 없음, B는 오히려 반대, D는 근거 없음.</div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q62 정답: C</div>
+        <div class="ans-correct">C 许多人不再用传统方式求职 (많은 사람들이 더 이상 전통 방식으로 구직하지 않는다)</div>
+        <div class="ans-exp">"很多求职者不再去拥挤的招聘会场投递纸质简历"에서 전통적인 종이 이력서 방식을 대신해 소셜 미디어로 구직하는 추세를 설명합니다.</div>
+      </div>
+
+      <div class="part-label-h">독해3부분 정답 · 해설</div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q71 정답: A</div>
+        <div class="ans-correct">A 人工智能的影响 (인공지능이 끼친 영향)</div>
+        <div class="ans-exp">첫 번째 단락: "如今大家都意识到了人工智能对我们每个人的重要影响" — 인공지능이 모든 사람에게 미치는 중요한 영향력을 언급합니다.</div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q72 정답: B</div>
+        <div class="ans-correct">B 机器代替人的体力 (기계가 인간의 체력을 대체한다)</div>
+        <div class="ans-exp">"让机器从体力上替代人，这个问题我们在工业化时代就已经解决了" — 바로 앞 문장에서 '기계가 체력적으로 인간을 대체하는 것'이 "이 문제"임을 알 수 있습니다.</div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q73 정답: C</div>
+        <div class="ans-correct">C 人脑如何工作还没弄明白 (인간의 뇌가 어떻게 작동하는지 아직 파악 못했다)</div>
+        <div class="ans-exp">"目前我们还没搞清人脑是怎样工作的" — 리옌홍이 직접 언급한 내용으로, 인간의 뇌 작동 원리조차 아직 모르는데 기계로 모방하는 것은 더더욱 불가능하다는 논지입니다.</div>
+      </div>
+
+      <div class="ans-card">
+        <div class="ans-qn">Q74 정답: D</div>
+        <div class="ans-correct">D 人们对人工智能的错误认识 (인공지능에 대한 사람들의 잘못된 인식)</div>
+        <div class="ans-exp">글 전체가 AI에 대한 두 가지 误区(잘못된 인식)를 중심으로 전개됩니다. ① AI가 반드시 인간처럼 생겨야 한다는 오해, ② 인간 뇌를 모방해 AI를 만들 수 있다는 오해를 지적합니다.</div>
+      </div>
+    </div>
+
+  </div><!-- /right-panel -->
+</div><!-- /main-wrap -->
+
+<script>
+  // Tab switching
+  function switchTab(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('[data-tab]').forEach(el => el.classList.remove('active'));
+    const tab = document.getElementById('tab-' + id);
+    if (tab) tab.classList.add('active');
+    document.querySelectorAll('[data-tab="' + id + '"]').forEach(el => el.classList.add('active'));
+  }
+
+  // Toggle translation for a single block
+  function toggleBlock(id, btn) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('show-ko');
+    if (btn) btn.classList.toggle('on', el.classList.contains('show-ko'));
+  }
+
+  // Toggle multiple blocks
+  function toggleAllBlocks(ids, show) {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('show-ko', show);
+    });
+  }
+
+  // Vocab mode
+  function setVM(mode, btn) {
+    document.querySelectorAll('.vm-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('vm-card').style.display = mode === 'card' ? '' : 'none';
+    document.getElementById('vm-list').style.display = mode === 'list' ? '' : 'none';
+  }
+
+  // Quiz
+  let cQ = 1, score = 0;
+  const total = 9;
+
+  function qa(btn, isCorrect) {
+    const card = btn.closest('.qcard');
+    card.querySelectorAll('.obtn').forEach(b => b.disabled = true);
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (isCorrect) {
+      score++;
+      btn.querySelector('.oletter').textContent = '✓';
+    } else {
+      btn.querySelector('.oletter').textContent = '✗';
+      card.querySelectorAll('.obtn').forEach(b => {
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+      });
+    }
+    document.getElementById('btnNext').style.display = '';
+    document.getElementById('btnNext').textContent = cQ < total ? '다음 →' : '결과 보기';
+    if (cQ > 1) document.getElementById('btnPrev').style.display = '';
+    // Update progress
+    const pct = Math.round((cQ / total) * 100);
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  function nextQ() {
+    if (cQ < total) {
+      document.getElementById('qq' + cQ).style.display = 'none';
+      cQ++;
+      document.getElementById('qq' + cQ).style.display = '';
+      document.getElementById('qprog').textContent = cQ + ' / ' + total + ' 문항';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = '';
+    } else {
+      document.getElementById('quiz-container').style.display = 'none';
+      document.getElementById('quiz-result').style.display = '';
+      document.getElementById('scoreDisp').textContent = score + ' / ' + total;
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = 'none';
+      document.getElementById('scoreNum').textContent = score + '/' + total;
+      document.getElementById('progressPct').textContent = '100%';
+      document.getElementById('progressBar').style.width = '100%';
+    }
+  }
+
+  function prevQ() {
+    if (cQ > 1) {
+      document.getElementById('qq' + cQ).style.display = 'none';
+      cQ--;
+      document.getElementById('qq' + cQ).style.display = '';
+      document.getElementById('qprog').textContent = cQ + ' / ' + total + ' 문항';
+      if (cQ === 1) document.getElementById('btnPrev').style.display = 'none';
+    }
+  }
+
+  function resetQuiz() {
+    score = 0; cQ = 1;
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('quiz-container').style.display = '';
+    document.querySelectorAll('.quiz-q').forEach(q => q.style.display = 'none');
+    document.getElementById('qq1').style.display = '';
+    document.querySelectorAll('.obtn').forEach(b => { b.disabled = false; b.classList.remove('correct','wrong'); });
+    document.querySelectorAll('.oletter').forEach((l,i) => l.textContent = ['A','B','C','D'][i % 4]);
+    document.getElementById('qprog').textContent = '1 / 9 문항';
+    document.getElementById('btnNext').style.display = 'none';
+    document.getElementById('btnPrev').style.display = 'none';
+    document.getElementById('progressPct').textContent = '0%';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('scoreNum').textContent = '-';
+  }
+</script>
+</body>
+</html>
