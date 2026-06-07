@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Study 01 — Uzbekistan Tops Japan Travel Ranking</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:#2563EB; --blue-dark:#1D4ED8; --blue-light:#EFF6FF;
+      --green:#16A34A; --green-light:#F0FDF4;
+      --bg:#F7F8FA; --surface:#FFFFFF; --border:#E4E7EB; --text:#1A1A2E; --muted:#6B7280;
+      --radius:12px; --shadow:0 2px 12px rgba(0,0,0,.08);
+    }
+    body { font-family:'Segoe UI','Apple SD Gothic Neo',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+    header {
+      background:var(--blue); color:#fff;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 28px; position:sticky; top:0; z-index:100;
+      box-shadow:0 2px 8px rgba(0,0,0,.2); flex-wrap:wrap; gap:10px;
+    }
+    header h1 { font-size:1.05rem; font-weight:700; line-height:1.3; }
+    header h1 span { opacity:.8; font-weight:400; font-size:.85rem; margin-left:8px; }
+    .header-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .level-badge { background:#FBBF24; color:#1A1A2E; font-size:.78rem; font-weight:700; padding:4px 12px; border-radius:999px; }
+    .date-chip { background:rgba(255,255,255,.2); font-size:.82rem; padding:4px 12px; border-radius:8px; }
+    .back-btn { background:rgba(255,255,255,.15); color:#fff; font-size:.8rem; padding:5px 12px; border-radius:8px; text-decoration:none; border:1px solid rgba(255,255,255,.3); }
+    .back-btn:hover { background:rgba(255,255,255,.3); }
+
+    .main-wrap {
+      display:grid; grid-template-columns:310px 1fr; gap:18px;
+      padding:18px 22px; max-width:1600px; margin:0 auto;
+    }
+
+    /* ===== LEFT ===== */
+    .left-panel { display:flex; flex-direction:column; gap:12px; }
+
+    .audio-card { background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+    .audio-card h3 { font-size:.75rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px; }
+    .audio-wrap { background:var(--bg); border-radius:10px; padding:10px; }
+    audio { width:100%; border-radius:8px; }
+    .audio-meta { display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted); margin-top:8px; }
+
+    .info-card { background:var(--surface); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+    .info-card h3 { font-size:.75rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
+    .info-row { display:flex; justify-content:space-between; font-size:.83rem; padding:5px 0; border-bottom:1px solid var(--border); }
+    .info-row:last-child { border-bottom:none; }
+    .info-row .lbl { color:var(--muted); }
+    .info-row .val { font-weight:600; }
+
+    .part-nav { display:flex; flex-direction:column; gap:7px; }
+    .part-btn {
+      display:flex; align-items:center; gap:10px;
+      background:var(--surface); border:1.5px solid var(--border);
+      border-radius:var(--radius); padding:10px 12px;
+      cursor:pointer; transition:all .2s; text-align:left; width:100%;
+    }
+    .part-btn:hover { border-color:var(--blue); background:var(--blue-light); }
+    .part-btn.active { border-color:var(--blue); background:var(--blue-light); }
+    .part-icon { font-size:1.1rem; flex-shrink:0; }
+    .part-title { font-size:.85rem; font-weight:600; }
+    .part-sub { font-size:.72rem; color:var(--muted); margin-top:1px; }
+
+    .progress-card { background:var(--surface); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); }
+    .progress-label { display:flex; justify-content:space-between; font-size:.8rem; color:var(--muted); margin-bottom:7px; }
+    .progress-bar-wrap { background:#EEF0F4; border-radius:999px; height:7px; overflow:hidden; }
+    .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--blue),#60A5FA); border-radius:999px; transition:width .4s; }
+    .stat-row { display:flex; gap:8px; margin-top:10px; }
+    .stat-box { flex:1; text-align:center; background:var(--bg); border-radius:8px; padding:7px 4px; }
+    .stat-box .num { font-size:1.1rem; font-weight:800; color:var(--blue); }
+    .stat-box .lbl2 { font-size:.65rem; color:var(--muted); margin-top:1px; }
+
+    /* ===== RIGHT ===== */
+    .right-panel {
+      display:flex; flex-direction:column;
+      background:var(--surface); border-radius:var(--radius);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .tab-bar { display:flex; background:#F0F2F5; border-bottom:1px solid var(--border); overflow-x:auto; flex-shrink:0; }
+    .tab-btn {
+      flex-shrink:0; padding:12px 14px; font-size:.8rem; font-weight:600;
+      border:none; background:none; cursor:pointer; color:var(--muted);
+      transition:all .2s; border-bottom:3px solid transparent; white-space:nowrap;
+    }
+    .tab-btn:hover { color:var(--blue); }
+    .tab-btn.active { color:var(--blue); background:var(--surface); border-bottom-color:var(--blue); }
+    .tab-btn .badge { font-size:.65rem; background:#FBBF24; color:#fff; padding:1px 5px; border-radius:999px; margin-left:4px; }
+
+    .tab-content { flex:1; overflow-y:auto; padding:20px; display:none; }
+    .tab-content.active { display:block; }
+
+    /* Article */
+    .article-title { font-size:1.3rem; font-weight:800; line-height:1.4; margin-bottom:6px; }
+    .article-source { font-size:.78rem; color:var(--muted); margin-bottom:18px; }
+    .ctrl-row { display:flex; gap:7px; margin-bottom:14px; flex-wrap:wrap; }
+    .ctrl-btn {
+      padding:5px 12px; border-radius:8px; border:1.5px solid var(--border);
+      font-size:.78rem; cursor:pointer; background:var(--surface); font-weight:500; transition:all .2s;
+    }
+    .ctrl-btn:hover, .ctrl-btn.on { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .article-body { line-height:1.0; }
+    .para { margin-bottom:16px; }
+    .para-en { font-size:.95rem; line-height:1.8; color:var(--text); }
+    .para-ko { font-size:.83rem; line-height:1.7; color:var(--muted); margin-top:7px; padding-top:7px; border-top:1px dashed var(--border); display:none; }
+    .article-body.show-ko .para-ko { display:block; }
+    .section-label { font-size:.72rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:1px; margin:20px 0 8px; padding-bottom:5px; border-bottom:2px solid var(--blue-light); }
+
+    /* Vocab */
+    .vm-btn { padding:5px 11px; border-radius:8px; border:1.5px solid var(--border); font-size:.78rem; cursor:pointer; background:var(--surface); font-weight:500; transition:all .2s; }
+    .vm-btn.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .vc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(185px,1fr)); gap:10px; margin-top:12px; }
+    .fc { perspective:1000px; cursor:pointer; height:130px; }
+    .fc-inner { position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d; }
+    .fc.flipped .fc-inner { transform:rotateY(180deg); }
+    .fc-f,.fc-b { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:var(--radius); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px; text-align:center; box-shadow:var(--shadow); border:1.5px solid var(--border); }
+    .fc-f { background:var(--surface); }
+    .fc-b { background:var(--blue); color:#fff; transform:rotateY(180deg); }
+    .fw { font-size:1.15rem; font-weight:800; }
+    .fp { font-size:.73rem; color:var(--muted); margin-top:2px; font-style:italic; }
+    .fpos { font-size:.65rem; background:var(--blue-light); color:var(--blue); padding:2px 7px; border-radius:999px; margin-top:5px; font-weight:700; }
+    .fh { font-size:.63rem; margin-top:8px; opacity:.5; }
+    .fb-def { font-size:.8rem; font-weight:600; transform:rotateY(180deg); line-height:1.5; }
+    .vt { width:100%; border-collapse:collapse; font-size:.87rem; margin-top:12px; }
+    .vt th { text-align:left; padding:8px 10px; background:var(--bg); font-size:.72rem; color:var(--muted); text-transform:uppercase; }
+    .vt td { padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .vt tr:hover td { background:var(--blue-light); }
+    .vword { font-weight:800; font-size:.95rem; }
+    .vipa { color:#7C3AED; font-size:.8rem; font-style:italic; }
+    .vpos { font-size:.68rem; font-weight:700; background:var(--blue-light); color:var(--blue); padding:1px 6px; border-radius:4px; }
+    .vex { font-size:.8rem; color:var(--muted); margin-top:3px; font-style:italic; }
+
+    /* Discussion */
+    .disc-section { margin-bottom:22px; }
+    .disc-title { font-size:.85rem; font-weight:700; color:var(--blue); margin-bottom:10px; padding:7px 12px; background:var(--blue-light); border-radius:8px; border-left:3px solid var(--blue); }
+    .disc-q { display:flex; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:.87rem; line-height:1.6; }
+    .disc-q:last-child { border-bottom:none; }
+    .disc-n { flex-shrink:0; width:22px; height:22px; background:var(--blue); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; margin-top:1px; }
+
+    /* Quiz */
+    .quiz-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .quiz-hdr h3 { font-size:.97rem; font-weight:700; }
+    .qprog { font-size:.8rem; color:var(--muted); }
+    .qcard { background:var(--bg); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
+    .qnum { font-size:.72rem; color:var(--blue); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .qtext { font-size:.93rem; font-weight:600; line-height:1.65; margin-bottom:14px; white-space:pre-line; }
+    .olist { display:flex; flex-direction:column; gap:6px; }
+    .obtn {
+      padding:10px 14px; border-radius:10px; border:1.5px solid var(--border);
+      background:var(--surface); cursor:pointer; text-align:left; font-size:.85rem;
+      transition:all .2s; display:flex; align-items:flex-start; gap:9px; font-family:inherit;
+    }
+    .obtn:hover { border-color:var(--blue); background:var(--blue-light); }
+    .obtn.correct { border-color:var(--green); background:var(--green-light); color:var(--green); }
+    .obtn.wrong { border-color:#DC2626; background:#FEF2F2; color:#DC2626; }
+    .oletter { width:24px; height:24px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; flex-shrink:0; margin-top:0px; }
+    .quiz-nav { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+    .quiz-nav button { padding:8px 20px; border-radius:8px; border:none; cursor:pointer; font-size:.87rem; font-weight:600; transition:all .2s; font-family:inherit; }
+    .btn-p { background:var(--blue); color:#fff; }
+    .btn-p:hover { background:var(--blue-dark); }
+    .btn-g { background:var(--bg); color:var(--muted); border:1.5px solid var(--border); }
+
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:999px; }
+
+    @media (max-width:900px) {
+      .main-wrap { grid-template-columns:1fr; }
+      .left-panel { order:2; }
+      .right-panel { order:1; min-height:500px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🇺🇿 Uzbekistan Tops Japan Travel Ranking <span>DMM英会話 데일리뉴스</span></h1>
+  <div class="header-right">
+    <span class="level-badge">Advanced · Lv.7</span>
+    <span class="date-chip">2026년 6월 7일 (일)</span>
+    <a href="index.html" class="back-btn">← 홈으로</a>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+  <!-- ===== LEFT ===== -->
+  <div class="left-panel">
+
+    <div class="audio-card">
+      <h3>🔊 Recording</h3>
+      <div class="audio-wrap">
+        <audio id="mainAudio" controls preload="metadata">
+          <source src="uzbekistan-tops-japan-travel-ranking.mp3" type="audio/mpeg">
+          오디오를 재생할 수 없습니다.
+        </audio>
+      </div>
+      <div class="audio-meta">
+        <span>AI 생성 오디오</span>
+        <span>2:25</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>📋 학습 정보</h3>
+      <div class="info-row"><span class="lbl">출처</span><span class="val">DMM英会話</span></div>
+      <div class="info-row"><span class="lbl">섹션</span><span class="val">데일리뉴스</span></div>
+      <div class="info-row"><span class="lbl">레벨</span><span class="val">Advanced (7)</span></div>
+      <div class="info-row"><span class="lbl">핵심 단어</span><span class="val">6개</span></div>
+      <div class="info-row"><span class="lbl">토론 문제</span><span class="val">10문항</span></div>
+      <div class="info-row"><span class="lbl">퀴즈</span><span class="val">5문항</span></div>
+    </div>
+
+    <div class="info-card">
+      <h3>🗂️ 탭 이동</h3>
+      <div class="part-nav">
+        <button class="part-btn active" onclick="switchTab('article',this)">
+          <span class="part-icon">📄</span>
+          <div><div class="part-title">기사 전문</div><div class="part-sub">번역 토글 포함</div></div>
+        </button>
+        <button class="part-btn" onclick="switchTab('vocab',this)">
+          <span class="part-icon">📚</span>
+          <div><div class="part-title">단어 학습</div><div class="part-sub">6개 핵심 단어</div></div>
+        </button>
+        <button class="part-btn" onclick="switchTab('discussion',this)">
+          <span class="part-icon">💡</span>
+          <div><div class="part-title">토론 문제</div><div class="part-sub">Exercise 3 &amp; 4</div></div>
+        </button>
+        <button class="part-btn" onclick="switchTab('quiz',this)">
+          <span class="part-icon">✏️</span>
+          <div><div class="part-title">이해도 퀴즈</div><div class="part-sub">5문항 인터랙티브</div></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-label"><span>학습 진도</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="num">6</div><div class="lbl2">단어</div></div>
+        <div class="stat-box"><div class="num">10</div><div class="lbl2">토론</div></div>
+        <div class="stat-box"><div class="num">5</div><div class="lbl2">퀴즈</div></div>
+        <div class="stat-box"><div class="num" id="scoreNum">-</div><div class="lbl2">점수</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== RIGHT ===== -->
+  <div class="right-panel">
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="article" onclick="switchTab('article',this)">📄 기사 전문</button>
+      <button class="tab-btn" data-tab="vocab" onclick="switchTab('vocab',this)">📚 단어 <span class="badge">6</span></button>
+      <button class="tab-btn" data-tab="discussion" onclick="switchTab('discussion',this)">💡 토론</button>
+      <button class="tab-btn" data-tab="quiz" onclick="switchTab('quiz',this)">✏️ 퀴즈 <span class="badge">5</span></button>
+    </div>
+
+    <!-- ===== TAB: ARTICLE ===== -->
+    <div class="tab-content active" id="tab-article">
+      <h2 class="article-title">Uzbekistan Tops Japan Travel Ranking</h2>
+      <div class="article-source">DMM英会話 데일리뉴스 · 2026.06.07 · Advanced</div>
+
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="toggleKo(this)">한국어 번역 토글</button>
+        <button class="ctrl-btn" onclick="showAllKo(true)">전체 번역 보기</button>
+        <button class="ctrl-btn" onclick="showAllKo(false)">번역 숨기기</button>
+      </div>
+
+      <div class="article-body" id="articleBody">
+
+        <div class="para">
+          <div class="para-en">A ranking of popular overseas destinations for Japanese travelers has put Uzbekistan in the top spot this summer.</div>
+          <div class="para-ko">일본 여행자들이 선호하는 해외 여행지 랭킹에서 우즈베키스탄이 이번 여름 1위를 차지했습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Oooh — which rhymes with "you" — is a travel platform that connects Japanese travelers with local travel agencies around the world.</div>
+          <div class="para-ko">Oooh — '유(you)'와 운이 맞는 발음 — 는 일본 여행자들과 전 세계 현지 여행사를 연결해 주는 여행 플랫폼입니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">According to the company's booking data for trips between July and September this year, the most popular summer destination for Oooh customers is Uzbekistan.</div>
+          <div class="para-ko">올해 7월부터 9월 사이의 여행 예약 데이터에 따르면, Oooh 고객들의 이번 여름 가장 인기 있는 여행지는 우즈베키스탄입니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Eleven percent of customers booked trips to Uzbekistan this summer. Seven percent chose Peru, and 6% booked trips to Mongolia.</div>
+          <div class="para-ko">고객의 11%가 이번 여름 우즈베키스탄 여행을 예약했습니다. 7%는 페루를 선택했고, 6%는 몽골 여행을 예약했습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Oooh suggests that more Japanese people are choosing destinations like these because the war in the Middle East has made flights to other international destinations uncertain.</div>
+          <div class="para-ko">Oooh는 중동의 전쟁으로 인해 다른 국제 여행지로의 항공편이 불안정해지면서, 더 많은 일본인들이 이런 여행지를 선택하고 있다고 설명합니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">So why is Uzbekistan this year's number one choice?</div>
+          <div class="para-ko">그렇다면 우즈베키스탄이 올해 1위를 차지한 이유는 무엇일까요?</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Well, in Uzbekistan you can explore historic Silk Road cities like Samarkand and Bukhara, with their beautiful Islamic architecture. You can also visit desert ruins and busy bazaars, see traditional dance performances and even take cooking lessons.</div>
+          <div class="para-ko">우즈베키스탄에서는 아름다운 이슬람 건축물이 있는 사마르칸트와 부하라 같은 역사적인 실크로드 도시를 탐험할 수 있습니다. 또한 사막의 유적지와 활기찬 바자르를 방문하고, 전통 무용 공연을 감상하거나 요리 수업을 받을 수도 있습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Hotels in Uzbekistan are also cheaper in the summer months, meaning you can enjoy a unique experience at a reasonable price. And although the country is very hot during its summer days, tourists can still enjoy sightseeing in the cooler mornings and evenings.</div>
+          <div class="para-ko">우즈베키스탄의 호텔 가격도 여름에는 저렴해져, 합리적인 가격에 독특한 경험을 즐길 수 있습니다. 여름 낮에는 매우 덥지만, 관광객들은 선선한 아침과 저녁에 관광을 즐길 수 있습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Peru, which came second for Oooh bookings, is perhaps popular because July to September is the dry season there, making it the ideal time to visit sites like Machu Picchu.</div>
+          <div class="para-ko">Oooh 예약에서 2위를 차지한 페루는 7월에서 9월이 건기여서 마추픽추 같은 유적지를 방문하기에 이상적인 시기이기 때문에 인기가 높습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Summer is also the best time to visit Mongolia, as the weather is relatively mild, and visitors can enjoy outdoor activities like riding a horse or staying in a yurt.</div>
+          <div class="para-ko">몽골도 여름이 가장 방문하기 좋은 시기로, 날씨가 비교적 온화하고 승마나 게르에서의 숙박 같은 야외 활동을 즐길 수 있습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Other popular summer destinations include Kenya and Tanzania, which are in their dry season at this time of year, and so good for safaris. Madagascar's roads are also in their best condition during this season, while Tajikistan is a popular place for people to visit together with Uzbekistan.</div>
+          <div class="para-ko">다른 인기 여행지로는 건기로 사파리를 즐기기 좋은 케냐와 탄자니아, 이 시기에 도로 상태가 가장 좋은 마다가스카르, 우즈베키스탄과 함께 방문하기 좋은 타지키스탄 등이 있습니다.</div>
+        </div>
+
+        <div class="para">
+          <div class="para-en">Oooh says more of its customers are now choosing trips with unique natural and cultural experiences.</div>
+          <div class="para-ko">Oooh는 점점 더 많은 고객들이 독특한 자연 및 문화 경험이 있는 여행을 선택하고 있다고 밝혔습니다.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== TAB: VOCAB ===== -->
+    <div class="tab-content" id="tab-vocab">
+      <div class="ctrl-row">
+        <button class="vm-btn active" onclick="setVM('card',this)">🃏 플래시카드</button>
+        <button class="vm-btn" onclick="setVM('list',this)">📋 목록 보기</button>
+      </div>
+
+      <div id="vm-card">
+        <div class="vc-grid">
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">ranking</div>
+                <div class="fp">ˈræŋkɪŋ</div>
+                <div class="fpos">명사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">순위, 랭킹<br/><br/><small style="font-size:.72rem;opacity:.85">a position on a scale showing importance</small></div></div>
+            </div>
+          </div>
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">uncertain</div>
+                <div class="fp">ʌnˈsɜːrtn</div>
+                <div class="fpos">형용사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">불확실한, 불안정한<br/><br/><small style="font-size:.72rem;opacity:.85">not clear, known or decided</small></div></div>
+            </div>
+          </div>
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">ruin</div>
+                <div class="fp">ˈruːən</div>
+                <div class="fpos">명사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">유적, 폐허<br/><br/><small style="font-size:.72rem;opacity:.85">remains of a damaged building</small></div></div>
+            </div>
+          </div>
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">sightseeing</div>
+                <div class="fp">ˈsaɪtsiːɪŋ</div>
+                <div class="fpos">명사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">관광<br/><br/><small style="font-size:.72rem;opacity:.85">visiting tourist attractions</small></div></div>
+            </div>
+          </div>
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">relatively</div>
+                <div class="fp">ˈrelətɪvli</div>
+                <div class="fpos">부사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">비교적, 상대적으로<br/><br/><small style="font-size:.72rem;opacity:.85">in comparison with something else</small></div></div>
+            </div>
+          </div>
+
+          <div class="fc" onclick="this.classList.toggle('flipped')">
+            <div class="fc-inner">
+              <div class="fc-f">
+                <div class="fw">mild</div>
+                <div class="fp">maɪld</div>
+                <div class="fpos">형용사</div>
+                <div class="fh">탭하면 뜻 확인 ↩</div>
+              </div>
+              <div class="fc-b"><div class="fb-def">온화한, 따뜻한<br/><br/><small style="font-size:.72rem;opacity:.85">(weather) a little warm, not as cold as expected</small></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="vm-list" style="display:none">
+        <table class="vt">
+          <thead><tr><th>단어</th><th>발음</th><th>품사</th><th>의미 / 예문</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="vword">ranking</div></td>
+              <td><div class="vipa">ˈræŋkɪŋ</div></td>
+              <td><span class="vpos">명사</span></td>
+              <td>순위, 랭킹<div class="vex">Roger Federer held the top spot on the ATP rankings for 237 weeks.</div></td>
+            </tr>
+            <tr>
+              <td><div class="vword">uncertain</div></td>
+              <td><div class="vipa">ʌnˈsɜːrtn</div></td>
+              <td><span class="vpos">형용사</span></td>
+              <td>불확실한, 불안정한<div class="vex">Without proper funding, the future of the project is uncertain.</div></td>
+            </tr>
+            <tr>
+              <td><div class="vword">ruin</div></td>
+              <td><div class="vipa">ˈruːən</div></td>
+              <td><span class="vpos">명사</span></td>
+              <td>유적, 폐허<div class="vex">The highlight of our trip was visiting the ancient ruins of Machu Picchu.</div></td>
+            </tr>
+            <tr>
+              <td><div class="vword">sightseeing</div></td>
+              <td><div class="vipa">ˈsaɪtsiːɪŋ</div></td>
+              <td><span class="vpos">명사</span></td>
+              <td>관광<div class="vex">We had plenty of time to go sightseeing in Paris after the conference.</div></td>
+            </tr>
+            <tr>
+              <td><div class="vword">relatively</div></td>
+              <td><div class="vipa">ˈrelətɪvli</div></td>
+              <td><span class="vpos">부사</span></td>
+              <td>비교적, 상대적으로<div class="vex">Despite the rain this week, this has been a relatively dry spring.</div></td>
+            </tr>
+            <tr>
+              <td><div class="vword">mild</div></td>
+              <td><div class="vipa">maɪld</div></td>
+              <td><span class="vpos">형용사</span></td>
+              <td>온화한<div class="vex">The winters here are very mild compared to my home country.</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TAB: DISCUSSION ===== -->
+    <div class="tab-content" id="tab-discussion">
+      <div class="disc-section">
+        <div class="disc-title">💬 Exercise 3 — Discussion</div>
+        <div class="disc-q"><span class="disc-n">1</span>What are your thoughts on Oooh's ranking?</div>
+        <div class="disc-q"><span class="disc-n">2</span>Would you rather visit Uzbekistan, Peru or Mongolia?</div>
+        <div class="disc-q"><span class="disc-n">3</span>Do you look for unique cultural experiences when you plan trips?</div>
+        <div class="disc-q"><span class="disc-n">4</span>Have you been to any unique or unusual tourist destinations?</div>
+        <div class="disc-q"><span class="disc-n">5</span>Are there any less well-known destinations you're keen to visit?</div>
+      </div>
+
+      <div class="disc-section">
+        <div class="disc-title">💬 Exercise 4 — Further Discussion</div>
+        <div class="disc-q"><span class="disc-n">1</span>Do you have any travel plans for the summer?</div>
+        <div class="disc-q"><span class="disc-n">2</span>What are some of the top summer destinations in your country?</div>
+        <div class="disc-q"><span class="disc-n">3</span>Have you ever booked a trip through a travel agent?</div>
+        <div class="disc-q"><span class="disc-n">4</span>How far in advance do you typically book or plan your trips?</div>
+        <div class="disc-q"><span class="disc-n">5</span>Have you ever had to cancel or change your travel plans last minute?</div>
+      </div>
+    </div>
+
+    <!-- ===== TAB: QUIZ ===== -->
+    <div class="tab-content" id="tab-quiz">
+      <div class="quiz-hdr">
+        <h3>Comprehension Quiz</h3>
+        <span class="qprog" id="qprog">1 / 5 문항</span>
+      </div>
+
+      <div id="quiz-container">
+
+        <div class="qcard quiz-q" id="qq1">
+          <div class="qnum">Q1</div>
+          <div class="qtext">What is "Oooh"?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>A Japanese government tourism agency</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>A hotel booking app based in Uzbekistan</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>A travel platform connecting Japanese travelers with local agencies</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>A Japanese airline company</button>
+          </div>
+        </div>
+
+        <div class="qcard quiz-q" id="qq2" style="display:none">
+          <div class="qnum">Q2</div>
+          <div class="qtext">What percentage of Oooh customers booked trips to Uzbekistan this summer?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>6%</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>7%</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>11%</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>15%</button>
+          </div>
+        </div>
+
+        <div class="qcard quiz-q" id="qq3" style="display:none">
+          <div class="qnum">Q3</div>
+          <div class="qtext">According to Oooh, why are more Japanese travelers choosing destinations like Uzbekistan?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>Uzbekistan is much cheaper than other destinations</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>There are direct flights from Japan to Uzbekistan</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>The war in the Middle East has made flights to other destinations uncertain</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>Japan has a special travel agreement with Uzbekistan</button>
+          </div>
+        </div>
+
+        <div class="qcard quiz-q" id="qq4" style="display:none">
+          <div class="qnum">Q4</div>
+          <div class="qtext">Which of the following activities can tourists do in Uzbekistan?
+(according to the article)</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>Go skiing in the mountains</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>Take cooking lessons</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>Go whale watching</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>Visit tropical rainforests</button>
+          </div>
+        </div>
+
+        <div class="qcard quiz-q" id="qq5" style="display:none">
+          <div class="qnum">Q5</div>
+          <div class="qtext">Why is summer the best time to visit Mongolia, according to the article?</div>
+          <div class="olist">
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>Hotels are cheapest in summer</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>It is the dry season in Mongolia</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>The weather is relatively mild and outdoor activities are available</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>Direct flights from Japan are only available in summer</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="quiz-result" style="display:none;text-align:center;padding:40px 20px;">
+        <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+        <h3 style="font-size:1.3rem;font-weight:800;margin-bottom:8px;">완료!</h3>
+        <p style="color:var(--muted);margin-bottom:16px;">퀴즈를 모두 풀었습니다.</p>
+        <div style="font-size:2.2rem;font-weight:900;color:var(--blue);" id="scoreDisp">5 / 5</div>
+        <p style="color:var(--muted);font-size:.85rem;margin-top:4px;">정답</p>
+        <button class="btn-p" style="margin-top:20px;padding:11px 28px;border-radius:10px;" onclick="resetQuiz()">다시 풀기</button>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn-g" onclick="prevQ()" id="btnPrev" style="display:none">← 이전</button>
+        <button class="btn-p" onclick="nextQ()" id="btnNext" style="display:none">다음 →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('[data-tab], .part-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    document.querySelectorAll('[data-tab="' + id + '"]').forEach(el => el.classList.add('active'));
+    if (btn) btn.classList.add('active');
+  }
+
+  // Article translation
+  function toggleKo(btn) {
+    const body = document.getElementById('articleBody');
+    body.classList.toggle('show-ko');
+    btn.classList.toggle('on', body.classList.contains('show-ko'));
+  }
+  function showAllKo(show) {
+    document.getElementById('articleBody').classList.toggle('show-ko', show);
+    document.querySelectorAll('.ctrl-btn').forEach(b => {
+      if (b.textContent.trim() === '한국어 번역 토글') b.classList.toggle('on', show);
+    });
+  }
+
+  // Vocab mode
+  function setVM(mode, btn) {
+    document.querySelectorAll('.vm-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('vm-card').style.display = mode === 'card' ? '' : 'none';
+    document.getElementById('vm-list').style.display = mode === 'list' ? '' : 'none';
+  }
+
+  // Quiz
+  let cQ = 1, score = 0;
+  const total = 5;
+
+  function qa(btn, isCorrect) {
+    const card = btn.closest('.qcard');
+    card.querySelectorAll('.obtn').forEach(b => b.disabled = true);
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (isCorrect) {
+      score++;
+      btn.querySelector('.oletter').textContent = '✓';
+    } else {
+      btn.querySelector('.oletter').textContent = '✗';
+      card.querySelectorAll('.obtn').forEach(b => {
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').includes('true')) b.classList.add('correct');
+      });
+    }
+    document.getElementById('btnNext').style.display = '';
+    document.getElementById('btnNext').textContent = cQ < total ? '다음 →' : '결과 보기';
+    if (cQ > 1) document.getElementById('btnPrev').style.display = '';
+    const pct = Math.round((cQ / total) * 100);
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  function nextQ() {
+    if (cQ < total) {
+      document.getElementById('qq' + cQ).style.display = 'none';
+      cQ++;
+      document.getElementById('qq' + cQ).style.display = '';
+      document.getElementById('qprog').textContent = cQ + ' / ' + total + ' 문항';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = '';
+    } else {
+      document.getElementById('quiz-container').style.display = 'none';
+      document.getElementById('quiz-result').style.display = '';
+      document.getElementById('scoreDisp').textContent = score + ' / ' + total;
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = 'none';
+      document.getElementById('scoreNum').textContent = score + '/' + total;
+      document.getElementById('progressPct').textContent = '100%';
+      document.getElementById('progressBar').style.width = '100%';
+    }
+  }
+
+  function prevQ() {
+    if (cQ > 1) {
+      document.getElementById('qq' + cQ).style.display = 'none';
+      cQ--;
+      document.getElementById('qq' + cQ).style.display = '';
+      document.getElementById('qprog').textContent = cQ + ' / ' + total + ' 문항';
+      if (cQ === 1) document.getElementById('btnPrev').style.display = 'none';
+    }
+  }
+
+  function resetQuiz() {
+    score = 0; cQ = 1;
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('quiz-container').style.display = '';
+    document.querySelectorAll('.quiz-q').forEach(q => q.style.display = 'none');
+    document.getElementById('qq1').style.display = '';
+    document.querySelectorAll('.obtn').forEach(b => { b.disabled = false; b.classList.remove('correct','wrong'); });
+    document.querySelectorAll('.oletter').forEach((l,i) => l.textContent = ['A','B','C','D'][i % 4]);
+    document.getElementById('qprog').textContent = '1 / 5 문항';
+    document.getElementById('btnNext').style.display = 'none';
+    document.getElementById('btnPrev').style.display = 'none';
+    document.getElementById('progressPct').textContent = '0%';
+    document.getElementById('progressBar').style.width = '0%';
+    document.getElementById('scoreNum').textContent = '-';
+  }
+</script>
+</body>
+</html>
