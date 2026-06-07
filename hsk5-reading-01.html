@@ -163,6 +163,16 @@
     .ans-exp { font-size:.83rem; color:var(--muted); line-height:1.65; }
     .ans-zh { font-size:.88rem; color:var(--text); line-height:1.75; margin-top:7px; background:var(--bg); border-radius:8px; padding:8px 10px; }
 
+
+    .opt-btn {
+      padding:5px 13px; border-radius:8px; border:1.5px solid var(--border);
+      font-size:.83rem; background:var(--surface); cursor:pointer;
+      transition:all .2s; font-family:inherit;
+    }
+    .opt-btn:hover:not(:disabled) { border-color:var(--red); background:var(--red-light); }
+    .opt-btn.correct { background:#F0FDF4; border-color:#16A34A; color:#16A34A; font-weight:700; }
+    .opt-btn.wrong { background:var(--red-light); border-color:var(--red); color:var(--red); font-weight:700; }
+    .opt-btn:disabled { cursor:default; }
     ::-webkit-scrollbar { width:5px; }
     ::-webkit-scrollbar-thumb { background:var(--border); border-radius:999px; }
 
@@ -263,8 +273,8 @@
       <div class="part-label-h">독해1부분 [46–48] — 빈칸 채우기</div>
       <div class="passage-block" id="p1blk">
         <div class="pzh">
-          许多人总是用放大镜看自己的缺点，却用缩小的镜头看自己的优势，这种妄自菲薄的做法无异于自寻烦恼。我们要明白，每个人都不可能是 <span class="blank-box">46. 完美</span> 的，"金无足赤，人无完人"才是生活的常态。一味苛求自己只会消耗内心的能量。真正聪明的人会发自内心接受自己的不足，并学会充分 <span class="blank-box">47. 发挥</span> 自己的优势，这样才能变得越来越好。<br/><br/>
-          此外，当面对未知的领域或全新挑战时，千万不要 <span class="blank-box">48. 轻易</span> 否定自己。你应该打破内心的恐惧，勇敢跨出第一步，大胆去尝试，为自己创造更多可能。
+          许多人总是用放大镜看自己的缺点，却用缩小的镜头看自己的优势，这种妄自菲薄的做法无异于自寻烦恼。我们要明白，每个人都不可能是 <span class="blank-box">46. ____</span> 的，"金无足赤，人无完人"才是生活的常态。一味苛求自己只会消耗内心的能量。真正聪明的人会发自内心接受自己的不足，并学会充分 <span class="blank-box">47. ____</span> 自己的优势，这样才能变得越来越好。<br/><br/>
+          此外，当面对未知的领域或全新挑战时，千万不要 <span class="blank-box">48. ____</span> 否定自己。你应该打破内心的恐惧，勇敢跨出第一步，大胆去尝试，为自己创造更多可能。
         </div>
         <div class="pko">
           많은 사람들이 항상 돋보기로 자신의 단점을 보고, 반면에 축소 렌즈로 자신의 강점을 보는데, 스스로를 함부로 비하하는 이런 행동은 스스로 걱정거리를 만드는 것과 다를 바 없다. 우리는 모든 사람이 <strong>46. 완벽(完美)</strong>할 수 없으며, '금에 순금이 없듯이 완전무결한 사람도 없다'는 것이 삶의 일반적인 모습임을 알아야 한다. 무턱대고 자신에게 지나치게 요구하는 건 내면의 에너지만 소모할 뿐이다. 정말로 현명한 사람은 자신의 부족함을 진심으로 받아들이고 자신의 강점을 충분히 <strong>47. 발휘(发挥)</strong>하는 법을 배워야만 점점 더 나아질 수 있다.<br/><br/>
@@ -276,31 +286,31 @@
       <div style="display:flex;flex-direction:column;gap:12px;">
         <div>
           <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">46. 每个人都不可能是 ____ 的</div>
-          <div class="opts-row">
-            <span class="opt">A 突出 두드러지다</span>
-            <span class="opt">B 天真 천진하다</span>
-            <span class="opt">C 伟大 위대하다</span>
-            <span class="opt ok">D 完美 완벽하다 ✓</span>
+          <div class="opts-row" data-correct="D">
+            <button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 突出</button>
+            <button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 天真</button>
+            <button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 伟大</button>
+            <button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 完美</button>
           </div>
         </div>
         <div class="q-sep"></div>
         <div>
           <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">47. 学会充分 ____ 自己的优势</div>
-          <div class="opts-row">
-            <span class="opt">A 展开 전개하다</span>
-            <span class="opt ok">B 发挥 발휘하다 ✓</span>
-            <span class="opt">C 启发 일깨우다</span>
-            <span class="opt">D 推广 보급하다</span>
+          <div class="opts-row" data-correct="B">
+            <button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 展开</button>
+            <button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 发挥</button>
+            <button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 启发</button>
+            <button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 推广</button>
           </div>
         </div>
         <div class="q-sep"></div>
         <div>
           <div style="font-size:.85rem;font-weight:700;margin-bottom:7px;">48. 千万不要 ____ 否定自己</div>
-          <div class="opts-row">
-            <span class="opt">A 自动 자동으로</span>
-            <span class="opt">B 反复 반복해서</span>
-            <span class="opt ok">C 轻易 함부로 ✓</span>
-            <span class="opt">D 绝对 절대로</span>
+          <div class="opts-row" data-correct="C">
+            <button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 自动</button>
+            <button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 反复</button>
+            <button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 轻易</button>
+            <button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 绝对</button>
           </div>
         </div>
       </div>
@@ -323,12 +333,11 @@
         <div class="pzh">如果你做的梦伴随着各种情绪，那这就是有意义的梦，这种梦的内容往往与我们醒着时未能解决的问题有关。这些问题进入到我们的梦境中，被再一次加工、处理，但不会带给我们困扰或压力。</div>
         <div class="pko">만약 당신이 꾼 꿈이 각종 감정을 수반하고 있다면, 그것은 곧 의미가 있는 꿈이며, 이런 꿈의 내용은 우리가 깨어 있을 때 해결하지 못한 문제와 종종 관계가 있다. 이 문제들이 우리의 꿈속으로 들어가서 재차 가공되고 처리되지만, 우리에게 괴로움이나 스트레스를 가져다주지는 않는다.</div>
         <div style="margin-top:12px;">
-          <div style="font-size:.75rem;font-weight:700;color:#16A34A;margin-bottom:7px;">정답: C — 带情绪的梦是有意义的 (감정을 수반하는 꿈은 의미가 있다)</div>
-          <div class="opts-row">
-            <span class="opt">A 多梦的人一般睡不好</span>
-            <span class="opt">B 梦的内容与现实无关</span>
-            <span class="opt ok">C 带情绪的梦是有意义的 ✓</span>
-            <span class="opt">D 做梦是缺乏自信的表现</span>
+          <div class="opts-row" data-correct="C">
+            <button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 多梦的人一般睡不好</button>
+            <button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 梦的内容与现实无关</button>
+            <button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 带情绪的梦是有意义的</button>
+            <button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 做梦是缺乏自信的表现</button>
           </div>
         </div>
       </div>
@@ -338,12 +347,11 @@
         <div class="pzh">如今，很多求职者不再去拥挤的招聘会场投递纸质简历，而是选择更方便快捷的方式，即通过各类社交媒体"刷"工作。微博、微信等平台成为求职和招聘信息的"集散地"，有的人也许刷刷朋友圈就能找到一份合适的工作。</div>
         <div class="pko">오늘날, 많은 구직자들이 더 이상 혼잡한 채용 박람회장에 가서 종이 이력서를 제출하지 않고, 더 편리하고 빠른 방식을 선택하는데, 즉 여러 소셜 미디어를 통해서 일자리를 '훑어본다'는 것이다. 웨이보, 위챗 등의 플랫폼이 구직과 채용 정보의 '허브'가 되면서, 누군가는 위챗 모멘트를 좀 훑어보면 적합한 일자리를 찾을 수 있을지 모른다.</div>
         <div style="margin-top:12px;">
-          <div style="font-size:.75rem;font-weight:700;color:#16A34A;margin-bottom:7px;">정답: C — 许多人不再用传统方式求职 (많은 사람들이 더 이상 전통 방식으로 구직하지 않는다)</div>
-          <div class="opts-row">
-            <span class="opt">A 要注意保护个人信息</span>
-            <span class="opt">B 网上的招聘广告不可靠</span>
-            <span class="opt ok">C 许多人不再用传统方式求职 ✓</span>
-            <span class="opt">D 投递纸质简历更容易被录用</span>
+          <div class="opts-row" data-correct="C">
+            <button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 要注意保护个人信息</button>
+            <button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 网上的招聘广告不可靠</button>
+            <button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 许多人不再用传统方式求职</button>
+            <button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 投递纸质简历更容易被录用</button>
           </div>
         </div>
       </div>
@@ -374,19 +382,19 @@
       <div style="display:flex;flex-direction:column;gap:10px;">
         <div class="passage-block">
           <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">71. 根据第一段，李彦宏的演讲提到了什么？</div>
-          <div class="opts-row"><span class="opt ok">A 人工智能的影响 ✓</span><span class="opt">B 人工智能的缺点</span><span class="opt">C 人类如何战胜机器人</span><span class="opt">D 人工智能非新生事物</span></div>
+          <div class="opts-row" data-correct="A"><button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 人工智能的影响</button><button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 人工智能的缺点</button><button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 人类如何战胜机器人</button><button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 人工智能非新生事物</button></div>
         </div>
         <div class="passage-block">
           <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">72. 第二段中"这个问题"指的是？</div>
-          <div class="opts-row"><span class="opt">A 机器人长得像人</span><span class="opt ok">B 机器代替人的体力 ✓</span><span class="opt">C 现在的机器人功能单一</span><span class="opt">D 人工智能如何在工厂应用</span></div>
+          <div class="opts-row" data-correct="B"><button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 机器人长得像人</button><button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 机器代替人的体力</button><button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 现在的机器人功能单一</button><button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 人工智能如何在工厂应用</button></div>
         </div>
         <div class="passage-block">
           <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">73. 下列哪项是李彦宏的观点？</div>
-          <div class="opts-row"><span class="opt">A 机器人可模仿人脑</span><span class="opt">B 人类不需要担心机器人</span><span class="opt ok">C 人脑如何工作还没弄明白 ✓</span><span class="opt">D 机器人首先要解决长相问题</span></div>
+          <div class="opts-row" data-correct="C"><button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 机器人可模仿人脑</button><button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 人类不需要担心机器人</button><button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 人脑如何工作还没弄明白</button><button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 机器人首先要解决长相问题</button></div>
         </div>
         <div class="passage-block">
           <div style="font-size:.82rem;font-weight:700;margin-bottom:6px;">74. 上文主要谈的是？</div>
-          <div class="opts-row"><span class="opt">A 人工智能的发展趋势</span><span class="opt">B 中国制造业面临的问题</span><span class="opt">C 如何让机器像人一样工作</span><span class="opt ok">D 人们对人工智能的错误认识 ✓</span></div>
+          <div class="opts-row" data-correct="D"><button class="opt-btn" data-letter="A" onclick="pickOpt(this)">A 人工智能的发展趋势</button><button class="opt-btn" data-letter="B" onclick="pickOpt(this)">B 中国制造业面临的问题</button><button class="opt-btn" data-letter="C" onclick="pickOpt(this)">C 如何让机器像人一样工作</button><button class="opt-btn" data-letter="D" onclick="pickOpt(this)">D 人们对人工智能的错误认识</button></div>
         </div>
       </div>
     </div>
@@ -464,10 +472,10 @@
           <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
           <div class="qtext">每个人都不可能是 ____ 的，"金无足赤，人无完人"才是生活的常态。</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>突出 (두드러지다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>天真 (천진하다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>伟大 (위대하다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>完美 (완벽하다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>突出</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>天真</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>伟大</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>完美</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq2" style="display:none">
@@ -475,10 +483,10 @@
           <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
           <div class="qtext">真正聪明的人会发自内心接受自己的不足，并学会充分 ____ 自己的优势。</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>展开 (전개하다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>发挥 (발휘하다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>启发 (일깨우다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>推广 (보급하다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>展开</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>发挥</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>启发</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>推广</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq3" style="display:none">
@@ -486,10 +494,10 @@
           <div class="qpart">빈칸에 들어갈 알맞은 단어를 고르세요</div>
           <div class="qtext">当面对未知的领域或全新挑战时，千万不要 ____ 否定自己。</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>自动 (자동으로)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>反复 (반복해서)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>轻易 (함부로)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>绝对 (절대로)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>自动</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>反复</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>轻易</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>绝对</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq4" style="display:none">
@@ -497,10 +505,10 @@
           <div class="qpart">지문의 내용과 일치하는 것을 고르세요</div>
           <div class="qtext">如果你做的梦伴随着各种情绪，那这就是有意义的梦，这种梦的内容往往与我们醒着时未能解决的问题有关。这些问题进入到我们的梦境中，被再一次加工、处理，但不会带给我们困扰或压力。</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>多梦的人一般睡不好 (꿈을 많이 꾸면 잠을 잘 못 잔다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>梦的内容与现实无关 (꿈의 내용은 현실과 무관하다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>带情绪的梦是有意义的 (감정을 수반하는 꿈은 의미가 있다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>做梦是缺乏自信的表现 (꿈을 꾸는 건 자신감 부족의 표현이다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>多梦的人一般睡不好</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>梦的内容与现实无关</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>带情绪的梦是有意义的</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>做梦是缺乏自信的表现</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq5" style="display:none">
@@ -508,10 +516,10 @@
           <div class="qpart">지문의 내용과 일치하는 것을 고르세요</div>
           <div class="qtext">如今，很多求职者不再去拥挤的招聘会场投递纸质简历，而是选择更方便快捷的方式，即通过各类社交媒体"刷"工作。微博、微信等平台成为求职和招聘信息的"集散地"，有的人也许刷刷朋友圈就能找到一份合适的工作。</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>要注意保护个人信息 (개인 정보 보호에 주의해야 한다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>网上的招聘广告不可靠 (인터넷 구인 광고는 믿을 만하지 않다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>许多人不再用传统方式求职 (많은 사람들이 더 이상 전통 방식으로 구직하지 않는다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>投递纸质简历更容易被录用 (종이 이력서를 제출하면 더 쉽게 채용된다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>要注意保护个人信息</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>网上的招聘广告不可靠</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>许多人不再用传统方式求职</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>投递纸质简历更容易被录用</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq6" style="display:none">
@@ -519,10 +527,10 @@
           <div class="qpart">根据第一段，李彦宏的演讲提到了什么？</div>
           <div class="qtext">첫 번째 단락에 따르면, 리옌홍의 연설에서 언급한 것은?</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">A</span>人工智能的影响 (인공지능이 끼친 영향)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人工智能的缺点 (인공지능의 단점)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>人类如何战胜机器人 (인류가 어떻게 로봇을 이기는가)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能非新生事物 (인공지능은 새로운 것이 아니다)</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">A</span>人工智能的影响</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人工智能的缺点</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>人类如何战胜机器人</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能非新生事物</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq7" style="display:none">
@@ -530,10 +538,10 @@
           <div class="qpart">第二段中"这个问题"指的是？</div>
           <div class="qtext">두 번째 단락의 "이 문제(这个问题)"가 가리키는 것은?</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人长得像人 (로봇이 인간을 닮았다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>机器代替人的体力 (기계가 인간의 체력을 대체한다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>现在的机器人功能单一 (현재 로봇의 기능이 단일하다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能如何在工厂应用 (인공지능이 어떻게 공장에서 활용되는가)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人长得像人</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">B</span>机器代替人的体力</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>现在的机器人功能单一</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>人工智能如何在工厂应用</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq8" style="display:none">
@@ -541,10 +549,10 @@
           <div class="qpart">下列哪项是李彦宏的观点？</div>
           <div class="qtext">다음 중 리옌홍의 관점은?</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人可模仿人脑 (로봇은 인간의 뇌를 모방할 수 있다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人类不需要担心机器人 (인류는 로봇을 걱정할 필요 없다)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>人脑如何工作还没弄明白 (인간의 뇌가 어떻게 작동하는지 아직 파악 못했다)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>机器人首先要解决长相问题 (로봇은 우선 생김새 문제를 해결해야 한다)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>机器人可模仿人脑</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>人类不需要担心机器人</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">C</span>人脑如何工作还没弄明白</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">D</span>机器人首先要解决长相问题</button>
           </div>
         </div>
         <div class="qcard quiz-q" id="qq9" style="display:none">
@@ -552,10 +560,10 @@
           <div class="qpart">上文主要谈的是？</div>
           <div class="qtext">윗글에서 주로 말하는 것은?</div>
           <div class="olist">
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>人工智能的发展趋势 (인공지능의 발전 추세)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>中国制造业面临的问题 (중국 제조업이 직면한 문제)</button>
-            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>如何让机器像人一样工作 (어떻게 기계를 인간처럼 일하게 하는가)</button>
-            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>人们对人工智能的错误认识 (인공지능에 대한 사람들의 잘못된 인식)</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">A</span>人工智能的发展趋势</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">B</span>中国制造业面临的问题</button>
+            <button class="obtn" onclick="qa(this,false)"><span class="oletter">C</span>如何让机器像人一样工作</button>
+            <button class="obtn" onclick="qa(this,true)"><span class="oletter">D</span>人们对人工智能的错误认识</button>
           </div>
         </div>
       </div>
@@ -643,7 +651,20 @@
 </div><!-- /main-wrap -->
 
 <script>
-  // Tab switching
+
+  function pickOpt(btn) {
+    const row = btn.closest('.opts-row');
+    if (row.dataset.answered) return;
+    row.dataset.answered = '1';
+    const correct = row.dataset.correct;
+    row.querySelectorAll('.opt-btn').forEach(b => {
+      b.disabled = true;
+      if (b.dataset.letter === correct) b.classList.add('correct');
+    });
+    if (btn.dataset.letter !== correct) btn.classList.add('wrong');
+  }
+
+    // Tab switching
   function switchTab(id) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('[data-tab]').forEach(el => el.classList.remove('active'));
