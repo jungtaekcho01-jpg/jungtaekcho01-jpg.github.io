@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🇨🇳 중국어 데일리 학습</title>
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:      #D0021B;
+      --red-light:#FDECEA;
+      --gold:     #F5A623;
+      --gold-light:#FFF8EC;
+      --bg:       #F7F8FA;
+      --surface:  #FFFFFF;
+      --border:   #E4E7EB;
+      --text:     #1A1A2E;
+      --muted:    #6B7280;
+      --radius:   12px;
+      --shadow:   0 2px 12px rgba(0,0,0,.08);
+    }
+    body { font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ===== Header ===== */
+    header {
+      background: var(--red);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: .5px; }
+    header h1 span { opacity: .8; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+    .date-nav {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.15);
+      border-radius: 8px; padding: 6px 14px;
+    }
+    .date-nav button {
+      background: none; border: none; color: #fff; font-size: 1.1rem;
+      cursor: pointer; padding: 2px 6px; border-radius: 4px;
+      transition: background .2s;
+    }
+    .date-nav button:hover { background: rgba(255,255,255,.25); }
+    .date-nav span { font-size: .9rem; font-weight: 600; white-space: nowrap; }
+    .streak { display: flex; align-items: center; gap: 6px; font-size: .85rem; }
+    .streak-flame { font-size: 1.2rem; }
+
+    /* ===== Main Layout ===== */
+    .main-wrap {
+      display: grid;
+      grid-template-columns: 44% 1fr;
+      gap: 20px;
+      padding: 20px 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+      height: calc(100vh - 60px);
+    }
+
+    /* ===== Left Panel: Video + Info ===== */
+    .left-panel { display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
+
+    .video-card {
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .video-wrapper {
+      position: relative; padding-top: 56.25%;
+    }
+    .video-wrapper iframe {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; border: none;
+    }
+    .video-meta {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 16px 18px; box-shadow: var(--shadow);
+    }
+    .video-meta h2 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .video-meta p { font-size: .85rem; color: var(--muted); line-height: 1.5; }
+    .tag { display: inline-block; background: var(--red-light); color: var(--red); font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; margin-top: 8px; }
+
+    /* Progress bar */
+    .progress-card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 16px 18px; box-shadow: var(--shadow);
+    }
+    .progress-label { display: flex; justify-content: space-between; font-size: .82rem; color: var(--muted); margin-bottom: 8px; }
+    .progress-bar-wrap { background: #EEF0F4; border-radius: 999px; height: 8px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--gold)); border-radius: 999px; transition: width .4s; }
+    .stat-row { display: flex; gap: 12px; margin-top: 14px; }
+    .stat-box { flex: 1; text-align: center; background: var(--bg); border-radius: 8px; padding: 10px 8px; }
+    .stat-box .num { font-size: 1.3rem; font-weight: 800; color: var(--red); }
+    .stat-box .lbl { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+
+    /* ===== Right Panel: Study Tabs ===== */
+    .right-panel {
+      display: flex; flex-direction: column;
+      background: var(--surface); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+
+    /* Tab bar */
+    .tab-bar {
+      display: flex; background: #F0F2F5; border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1; padding: 14px 10px; font-size: .85rem; font-weight: 600;
+      border: none; background: none; cursor: pointer; color: var(--muted);
+      transition: all .2s; border-bottom: 3px solid transparent; position: relative;
+    }
+    .tab-btn:hover { color: var(--red); }
+    .tab-btn.active { color: var(--red); background: var(--surface); border-bottom-color: var(--red); }
+    .tab-btn .badge { font-size: .7rem; background: var(--gold); color: #fff; padding: 1px 6px; border-radius: 999px; margin-left: 5px; font-weight: 700; }
+
+    /* Tab content */
+    .tab-content { flex: 1; overflow-y: auto; padding: 20px; display: none; }
+    .tab-content.active { display: block; }
+
+    /* ===== Script Tab ===== */
+    .script-controls {
+      display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;
+    }
+    .script-controls button {
+      padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+      font-size: .82rem; cursor: pointer; background: var(--surface);
+      transition: all .2s; font-weight: 500;
+    }
+    .script-controls button.active, .script-controls button:hover {
+      background: var(--red); color: #fff; border-color: var(--red);
+    }
+    .part-label { font-size: .78rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--red-light); }
+    .script-block { margin-bottom: 6px; }
+    .sentence-row {
+      padding: 8px 12px; border-radius: 8px; cursor: pointer;
+      transition: background .15s; line-height: 1.7;
+    }
+    .sentence-row:hover { background: var(--red-light); }
+    .sentence-zh { font-size: 1.02rem; color: var(--text); }
+    .sentence-ko { font-size: .87rem; color: var(--muted); margin-top: 4px; display: none; }
+    .sentence-row.show-ko .sentence-ko { display: block; }
+    .sentence-row.highlight { background: var(--gold-light); }
+
+    /* ===== Vocabulary Tab ===== */
+    .vocab-controls { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+    .vocab-mode-btn {
+      padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+      font-size: .82rem; cursor: pointer; background: var(--surface);
+      transition: all .2s; font-weight: 500;
+    }
+    .vocab-mode-btn.active { background: var(--red); color: #fff; border-color: var(--red); }
+    .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+
+    /* Flashcard */
+    .flashcard {
+      perspective: 1000px; cursor: pointer; height: 130px;
+    }
+    .flashcard-inner {
+      position: relative; width: 100%; height: 100%;
+      transition: transform .5s; transform-style: preserve-3d;
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+      border-radius: var(--radius); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 12px; text-align: center;
+      box-shadow: var(--shadow); border: 1.5px solid var(--border);
+    }
+    .flashcard-front { background: var(--surface); }
+    .flashcard-back { background: var(--red); color: #fff; transform: rotateY(180deg); }
+    .fc-zh { font-size: 1.3rem; font-weight: 700; }
+    .fc-pinyin { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+    .fc-ko { font-size: .95rem; font-weight: 600; }
+    .fc-hint { font-size: .72rem; margin-top: 8px; opacity: .7; }
+
+    /* List mode */
+    .vocab-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    .vocab-table th { text-align: left; padding: 10px 12px; background: var(--bg); font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .vocab-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .vocab-table tr:hover td { background: var(--red-light); }
+    .zh-bold { font-weight: 700; font-size: 1rem; }
+    .pinyin-cell { color: var(--gold); font-size: .85rem; }
+
+    /* ===== Expression Tab ===== */
+    .expr-card {
+      border-radius: var(--radius); border: 1.5px solid var(--border);
+      padding: 18px; margin-bottom: 14px;
+      transition: box-shadow .2s;
+    }
+    .expr-card:hover { box-shadow: 0 4px 16px rgba(208,2,27,.12); border-color: var(--red); }
+    .expr-pattern { font-size: 1.05rem; font-weight: 800; color: var(--red); margin-bottom: 6px; }
+    .expr-pinyin { font-size: .8rem; color: var(--gold); margin-bottom: 8px; }
+    .expr-meaning { font-size: .88rem; color: var(--muted); margin-bottom: 12px; }
+    .expr-example-zh { font-size: .95rem; line-height: 1.6; }
+    .expr-example-ko { font-size: .82rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+    .expr-chip { display: inline-block; background: var(--gold-light); color: var(--gold); font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; }
+
+    /* ===== Quiz Tab ===== */
+    .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .quiz-progress-text { font-size: .85rem; color: var(--muted); }
+    .question-card { background: var(--bg); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .q-num { font-size: .78rem; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .q-text { font-size: 1rem; font-weight: 600; line-height: 1.6; margin-bottom: 16px; }
+    .option-list { display: flex; flex-direction: column; gap: 8px; }
+    .option-btn {
+      padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--surface); cursor: pointer; text-align: left;
+      font-size: .9rem; transition: all .2s; display: flex; align-items: center; gap: 10px;
+    }
+    .option-btn:hover { border-color: var(--red); background: var(--red-light); }
+    .option-btn.correct { border-color: #16A34A; background: #F0FDF4; color: #16A34A; }
+    .option-btn.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+    .option-letter { width: 26px; height: 26px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; }
+    .quiz-nav { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    .quiz-nav button {
+      padding: 10px 22px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: .9rem; font-weight: 600; transition: all .2s;
+    }
+    .btn-primary { background: var(--red); color: #fff; }
+    .btn-primary:hover { background: #B30016; }
+    .btn-ghost { background: var(--bg); color: var(--muted); border: 1.5px solid var(--border); }
+    .btn-ghost:hover { background: var(--border); }
+
+    /* ===== Repeat Banner ===== */
+    .repeat-banner {
+      background: linear-gradient(135deg, var(--red), #FF6B6B);
+      color: #fff; border-radius: var(--radius); padding: 14px 18px;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .repeat-banner .icon { font-size: 1.6rem; }
+    .repeat-banner h3 { font-size: .95rem; font-weight: 700; }
+    .repeat-banner p { font-size: .8rem; opacity: .85; margin-top: 2px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+    /* Mobile fallback */
+    @media (max-width: 900px) {
+      .main-wrap { grid-template-columns: 1fr; height: auto; }
+      .right-panel { min-height: 600px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <h1>🇨🇳 중국어 데일리 학습 <span>Chinese Daily</span></h1>
+  <div class="date-nav">
+    <button onclick="changeDay(-1)">◀</button>
+    <span id="dateDisplay">2026년 6월 7일 (토)</span>
+    <button onclick="changeDay(1)">▶</button>
+  </div>
+  <div class="streak">
+    <span class="streak-flame">🔥</span>
+    <span>12일 연속 학습 중</span>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<div class="main-wrap">
+
+  <!-- LEFT: Video + Meta -->
+  <div class="left-panel">
+
+    <!-- Video Embed -->
+    <div class="video-card">
+      <div class="video-wrapper">
+        <video
+          src="video_diet.mp4"
+          controls
+          preload="metadata"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;">
+          브라우저가 video 태그를 지원하지 않습니다.
+        </video>
+      </div>
+    </div>
+
+    <!-- Video Meta -->
+    <div class="video-meta">
+      <h2>한국과 중국의 다이어트 약 열풍과 실태</h2>
+      <p>CCTV 뉴스 보도 | 외모 지상주의, 불법 약물 피해, 과학적 다이어트의 중요성</p>
+      <span class="tag">CCTV 뉴스</span>
+      <span class="tag">B1-B2</span>
+      <span class="tag">사회·건강</span>
+      <div style="margin-top:14px;">
+        <a href="https://youtu.be/rKYO8WvWgEw?si=fVIEuTcM6Ncb4CAj" target="_blank"
+           style="display:inline-flex;align-items:center;gap:6px;background:#FF0000;color:#fff;font-size:.82rem;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;">
+          ▶ YouTube에서 원본 보기
+        </a>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-card">
+      <div class="progress-label">
+        <span>오늘의 학습 진도</span>
+        <span id="progressPct">40%</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressBar" style="width:40%"></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="num">11</div>
+          <div class="lbl">단어</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">5</div>
+          <div class="lbl">표현</div>
+        </div>
+        <div class="stat-box">
+          <div class="num">5</div>
+          <div class="lbl">문제</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="daysCount">3</div>
+          <div class="lbl">복습일차</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /left-panel -->
+
+  <!-- RIGHT: Study Tabs -->
+  <div class="right-panel">
+
+    <!-- Tab bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('script', this)">📄 스크립트</button>
+      <button class="tab-btn" onclick="switchTab('full', this)">📰 전문</button>
+      <button class="tab-btn" onclick="switchTab('vocab', this)">📚 단어 <span class="badge">11</span></button>
+      <button class="tab-btn" onclick="switchTab('expr', this)">💡 표현·문법 <span class="badge">5</span></button>
+      <button class="tab-btn" onclick="switchTab('quiz', this)">✏️ 연습문제</button>
+    </div>
+
+    <!-- ========== TAB: SCRIPT ========== -->
+    <div class="tab-content active" id="tab-script">
+
+      <div class="repeat-banner">
+        <div class="icon">🔁</div>
+        <div>
+          <h3>반복 학습 중 — D+3</h3>
+          <p>처음 학습 후 3일째입니다. 지문을 다시 읽으며 기억을 강화하세요.</p>
+        </div>
+      </div>
+
+      <div class="script-controls">
+        <button class="active" onclick="toggleTranslation(this)">한국어 번역 토글</button>
+        <button onclick="highlightAll()">전체 하이라이트</button>
+        <button onclick="clearHighlight()">초기화</button>
+      </div>
+
+      <div class="part-label">Part 1 · 한국의 다이어트 약 열풍</div>
+
+      <div class="script-block">
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">韩国是全球肥胖率最低的国家之一，但在以瘦为美的潮流影响下，不少体重正常的韩国人也在服用减肥药。</div>
+          <div class="sentence-ko">한국은 세계에서 비만율이 가장 낮은 국가 중 하나이지만, 마른 것을 아름다움으로 여기는 트렌드의 영향으로 체중이 정상인 많은 한국인들도 다이어트 약을 복용하고 있습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">据韩国媒体23号报道，丹麦诺和诺德公司出品的一款减肥药，自去年10月15号在韩国上市以来热销，为这家药企贡献了至少2.7亿美元收入。</div>
+          <div class="sentence-ko">23일 한국 언론 보도에 따르면, 덴마크 노보 노디스크 사의 다이어트 약은 작년 10월 15일 한국 출시 이후 불티나게 팔리며 최소 2억 7천만 달러의 수입을 안겨주었습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">诺和诺德公司提示，该药副作用包括可能引起腹痛、低血糖和胰腺炎等，可能增加肠道、关节和肾脏受损的风险。</div>
+          <div class="sentence-ko">노보 노디스크 측은 이 약의 부작용으로 복통, 저혈당, 췌장염 등이 발생할 수 있으며 장기, 관절, 신장 손상 위험이 높아질 수 있다고 경고했습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">专家指出，减肥药在肥胖人口很少的韩国大行其道，深层原因是人们受到有悖健康的审美标准影响。</div>
+          <div class="sentence-ko">전문가들은 비만 인구가 적은 한국에서 다이어트 약이 크게 유행하는 근본 원인이 건강에 어긋나는 미적 기준 때문이라고 강조했습니다.</div>
+        </div>
+      </div>
+
+      <div class="part-label">Part 2 · 중국 불법 다이어트 약 피해 사례</div>
+
+      <div class="script-block">
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">南京有位周女士就关注到网络平台上的一款减肥药。这款减肥药声称：无需运动节食，十天瘦十斤，明星都在吃，安全不反弹。</div>
+          <div class="sentence-ko">난징의 주 모 씨는 온라인 플랫폼에서 '운동과 절식 없이 열흘에 5kg 감량, 연예인 복용, 요요 없음'을 내세운 약을 구매했습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">渐渐地，她开始出现口渴、口干、无精打采、心慌恶心，甚至失眠的症状。服药十天以后，各种不良反应接踵而至，身体和精神状态一落千丈。</div>
+          <div class="sentence-ko">점차 갈증, 무기력, 가슴 두근거림, 메스꺼움, 불면증 증상이 나타났습니다. 열흘 후 각종 부작용이 잇따라 나타나며 몸과 정신 상태가 급격히 악화되었습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">检测结果显示，这些减肥产品当中含有麻黄碱、伪麻黄碱、芬特拉明、氟西汀等多种有毒有害成分，对人的心脑血管、中枢神经甚至免疫力都有着极大的毒害性。</div>
+          <div class="sentence-ko">성분 분석 결과, 마황 성분과 플루옥세틴 등 유독 유해 성분이 포함되어 있었으며 심뇌혈관과 중추신경에 치명적인 영향을 미쳤습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko'); this.classList.toggle('highlight')">
+          <div class="sentence-zh">警方提示，减肥瘦身需要坚持科学原则，消费者应对任何号称"特效"的减肥产品提高警惕，坚决对"三无"产品说不。</div>
+          <div class="sentence-ko">경찰은 과학적인 다이어트 원칙을 지키고 '특효약' 광고에 현혹되지 말 것을 당부했습니다.</div>
+        </div>
+      </div>
+    </div><!-- /tab-script -->
+
+
+    <!-- ========== TAB: FULL TEXT ========== -->
+    <div class="tab-content" id="tab-full">
+
+      <div class="script-controls" style="margin-bottom:16px;">
+        <button class="active" onclick="toggleFullKo(this)">한국어 번역 토글</button>
+        <button onclick="toggleFullAll(true)">전체 번역 보기</button>
+        <button onclick="toggleFullAll(false)">번역 모두 숨기기</button>
+      </div>
+
+      <div class="part-label">Part 1 · 한국의 다이어트 약 열풍</div>
+
+      <div class="script-block">
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">韩国是全球肥胖率最低的国家之一，但在以瘦为美的潮流影响下，不少体重正常的韩国人也在服用减肥药。医学专家为此呼吁加强对减肥药使用的监管。</div>
+          <div class="sentence-ko">한국은 세계에서 비만율이 가장 낮은 국가 중 하나이지만, 마른 것을 아름다움으로 여기는 트렌드의 영향으로 체중이 정상인 많은 한국인들도 다이어트 약을 복용하고 있습니다. 이에 의학 전문가들은 다이어트 약 사용에 대한 감독 강화를 촉구하고 있습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">据韩国媒体23号报道，丹麦诺和诺德公司出品的一款减肥药，自去年10月15号在韩国上市以来热销，为这家药企贡献了至少2.7亿美元收入（约合人民币19亿元）。然而，经济合作与发展组织2023年发布的一份健康报告显示，韩国15岁以上人口中，只有大约4.3%的人属于肥胖人群。</div>
+          <div class="sentence-ko">23일 한국 언론 보도에 따르면, 덴마크 노보 노디스크 사가 출시한 다이어트 약은 작년 10월 15일 한국 출시 이후 불티나게 팔리며 최소 2억 7천만 달러(약 19억 위안)의 수입을 안겨주었습니다. 그러나 OECD의 2023년 건강 보고서에 따르면, 한국의 15세 이상 인구 중 비만 인구는 약 4.3%에 불과합니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">诺和诺德公司提示，该药副作用包括可能引起腹痛、低血糖和胰腺炎等，可能增加肠道、关节和肾脏受损的风险。韩国食品和药物安全部门建议医生，只给身体质量指数（BMI）不低于30的患者，以及达到27且患有并发症的患者开具处方。然而，不少医生开药时把关不严，使不符合条件的人也能轻松买到这种药。</div>
+          <div class="sentence-ko">노보 노디스크 측은 이 약의 부작용으로 복통, 저혈당, 췌장염 등이 발생할 수 있으며 장기, 관절, 신장 손상 위험이 높아질 수 있다고 경고했습니다. 한국 식약처는 BMI 30 이상인 환자나, BMI 27 이상이면서 합병증이 있는 환자에게만 처방할 것을 권고하고 있습니다. 하지만 많은 의사가 처방 시 기준을 엄격히 적용하지 않아 자격 미달인 사람들도 쉽게 약을 구매하고 있습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">韩国媒体援引韩国内分泌学专家的话报道，一些诊所开这种药的处方不是为了治疗肥胖，而是为了赚钱。这种药不在韩国全国医疗保险范围内，患者一个月药费平均为37.2万韩元（约合1960元人民币）。</div>
+          <div class="sentence-ko">한국 언론은 내분비학 전문가의 말을 인용해, 일부 클리닉이 비만 치료가 아닌 돈벌이 목적으로 처방전을 발행하고 있다고 보도했습니다. 이 약은 건강보험 비급여 항목으로, 한 달 약값은 평균 37.2만 원(약 1,960위안)입니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">专家指出，减肥药在肥胖人口很少的韩国大行其道，深层原因是人们受到有悖健康的审美标准影响，需要对减肥药的使用采取更严格的监管和更谨慎的态度。</div>
+          <div class="sentence-ko">전문가들은 비만 인구가 적은 한국에서 다이어트 약이 유행하는 근본 원인이 건강에 반하는 미적 기준 때문이라며, 더 엄격한 감독과 신중한 태도가 필요하다고 강조했습니다.</div>
+        </div>
+      </div>
+
+      <div class="part-label">Part 2 · 중국 불법 다이어트 약 피해 사례</div>
+
+      <div class="script-block">
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">对于关注减肥话题的人群来说，现在市面上的各种减肥产品让人眼花缭乱。南京有位周女士就关注到网络平台上的一款减肥药。这款减肥药声称：无需运动节食，十天瘦十斤，明星都在吃，安全不反弹。周女士被商家的宣传打动，当即下了单。但是，接下来的经历让她一言难尽。</div>
+          <div class="sentence-ko">다이어트에 관심 있는 사람들에게 시중의 다양한 다이어트 제품은 눈을 어지럽게 만듭니다. 난징의 주 모 씨는 온라인 플랫폼에서 '운동과 절식 없이 열흘에 5kg 감량, 연예인 복용, 요요 없음'을 내세운 약을 구매했습니다. 하지만 복용 후 그녀의 경험은 말로 다 하기 힘들 정도였습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">刚开始服药的三天，周女士并没有觉得有什么异常。渐渐地，她开始出现口渴、口干、无精打采、心慌恶心，甚至失眠的症状。服药十天以后，周女士确实感觉自己瘦了，但是头晕、烦躁、失眠等不良反应接踵而至，身体和精神状态一落千丈。她在家人的劝说下报了警。</div>
+          <div class="sentence-ko">초기 3일은 이상이 없었으나 점차 갈증, 무기력, 가슴 두근거림, 메스꺼움, 불면증 증상이 나타났습니다. 열흘 후 살은 빠졌지만 어지럼증, 불안감 등 부작용이 잇따르며 몸과 정신 상태가 급격히 악화되었습니다. 결국 가족의 권유로 경찰에 신고했습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">公安机关等相关部门立刻展开调查。检测结果显示，这些减肥产品当中含有麻黄碱、伪麻黄碱、芬特拉明、氟西汀等多种有毒有害成分。这些物质对人的心脑血管、中枢神经甚至免疫力都有着极大的毒害性。其中，麻黄碱服用后可使人兴奋，降低饥饿感，且有成瘾性和戒断反应。氟西汀是我国管制类精神药品，需严格遵照医嘱服用，否则会致人焦虑、认知缓慢，严重时甚至可能引发癫痫、狂躁等副作用。</div>
+          <div class="sentence-ko">공안 등 관계기관이 즉시 조사에 착수했습니다. 성분 분석 결과, 해당 제품에는 마황 성분, 펜터민, 플루옥세틴 등 유독 유해 성분이 포함되어 있었습니다. 이 물질들은 심뇌혈관과 중추신경에 치명적이며, 마황 성분은 흥분 및 식욕 억제 효과가 있으나 중독성과 금단 반응이 있습니다. 플루옥세틴은 향정신성 의약품으로 오남용 시 불안증, 인지 저하, 심하면 간질·조증까지 유발할 수 있습니다.</div>
+        </div>
+        <div class="sentence-row" onclick="this.classList.toggle('show-ko');this.classList.toggle('highlight')">
+          <div class="sentence-zh">警方提示，减肥瘦身需要坚持科学原则。消费者应对任何号称"特效"的减肥产品提高警惕，坚决对"三无"产品说不，避免买到有毒有害产品。</div>
+          <div class="sentence-ko">경찰은 과학적인 다이어트 원칙을 지키고, '특효약'을 자처하는 제품에 경계심을 갖고, 무허가 제품에 단호히 거절할 것을 당부했습니다.</div>
+        </div>
+      </div>
+
+    </div><!-- /tab-full -->
+
+    <!-- ========== TAB: VOCAB ========== -->
+    <div class="tab-content" id="tab-vocab">
+
+      <div class="vocab-controls">
+        <button class="vocab-mode-btn active" onclick="setVocabMode('card', this)">🃏 플래시카드</button>
+        <button class="vocab-mode-btn" onclick="setVocabMode('list', this)">📋 목록 보기</button>
+        <button class="vocab-mode-btn" onclick="setVocabMode('hide', this)">🙈 가리고 보기</button>
+      </div>
+
+      <!-- Card mode -->
+      <div id="vocab-card-mode">
+        <div class="vocab-grid">
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">肥胖率</div><div class="fc-pinyin">féipànglǜ</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">비만율</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">以…为美</div><div class="fc-pinyin">yǐ…wéiměi</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">~을 아름다움으로 여기다</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">监管</div><div class="fc-pinyin">jiānguǎn</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">감독 및 관리</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">热销</div><div class="fc-pinyin">rèxiāo</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">불티나게 팔리다</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">副作用</div><div class="fc-pinyin">fùzuòyòng</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">부작용</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">处方</div><div class="fc-pinyin">chǔfāng</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">처방(전)</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">并发症</div><div class="fc-pinyin">bìngfāzhèng</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">합병증</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">大行其道</div><div class="fc-pinyin">dàxíngqídào</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">크게 유행하다</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">眼花缭乱</div><div class="fc-pinyin">yǎnhuāliáoluàn</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">눈이 어지럽다</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">一言难尽</div><div class="fc-pinyin">yīyánnánjìn</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">한마디로 다 말하기 어렵다</div></div>
+            </div>
+          </div>
+
+          <div class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="flashcard-inner">
+              <div class="flashcard-front"><div class="fc-zh">警惕</div><div class="fc-pinyin">jǐngtì</div><div class="fc-hint">탭하면 뜻 확인 ↩</div></div>
+              <div class="flashcard-back"><div class="fc-ko">경계하다, 주의하다</div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- List mode (hidden by default) -->
+      <div id="vocab-list-mode" style="display:none">
+        <table class="vocab-table">
+          <thead>
+            <tr><th>단어</th><th>병음</th><th>의미</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="zh-bold">肥胖率</td><td class="pinyin-cell">féipànglǜ</td><td>비만율</td></tr>
+            <tr><td class="zh-bold">以…为美</td><td class="pinyin-cell">yǐ…wéiměi</td><td>~을 아름다움으로 여기다</td></tr>
+            <tr><td class="zh-bold">监管</td><td class="pinyin-cell">jiānguǎn</td><td>감독 및 관리</td></tr>
+            <tr><td class="zh-bold">热销</td><td class="pinyin-cell">rèxiāo</td><td>불티나게 팔리다</td></tr>
+            <tr><td class="zh-bold">副作用</td><td class="pinyin-cell">fùzuòyòng</td><td>부작용</td></tr>
+            <tr><td class="zh-bold">处方</td><td class="pinyin-cell">chǔfāng</td><td>처방(전)</td></tr>
+            <tr><td class="zh-bold">并发症</td><td class="pinyin-cell">bìngfāzhèng</td><td>합병증</td></tr>
+            <tr><td class="zh-bold">大行其道</td><td class="pinyin-cell">dàxíngqídào</td><td>크게 유행하다, 활개를 치다</td></tr>
+            <tr><td class="zh-bold">眼花缭乱</td><td class="pinyin-cell">yǎnhuāliáoluàn</td><td>눈이 어지럽다</td></tr>
+            <tr><td class="zh-bold">一言难尽</td><td class="pinyin-cell">yīyánnánjìn</td><td>한마디로 다 말하기 어렵다</td></tr>
+            <tr><td class="zh-bold">警惕</td><td class="pinyin-cell">jǐngtì</td><td>경계하다, 주의하다</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Hide mode -->
+      <div id="vocab-hide-mode" style="display:none">
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px;">📖 뜻을 가렸습니다. 한자를 보고 뜻을 떠올린 후 클릭해서 확인하세요.</p>
+        <table class="vocab-table">
+          <thead><tr><th>단어</th><th>병음</th><th>의미 (클릭해서 확인)</th></tr></thead>
+          <tbody id="hide-tbody"></tbody>
+        </table>
+      </div>
+
+    </div><!-- /tab-vocab -->
+
+    <!-- ========== TAB: EXPRESSIONS ========== -->
+    <div class="tab-content" id="tab-expr">
+
+      <div class="repeat-banner" style="background:linear-gradient(135deg,var(--gold),#FF9F43)">
+        <div class="icon">💡</div>
+        <div>
+          <h3>핵심 표현 5개 — 반복 복습</h3>
+          <p>예문을 소리 내어 읽고 상황을 떠올리며 학습하세요.</p>
+        </div>
+      </div>
+
+      <div class="expr-card">
+        <div class="expr-chip">시간 표현</div>
+        <div class="expr-pattern">自…以来 (zì…yǐlái)</div>
+        <div class="expr-meaning">~한 이래로 (과거 특정 시점부터 현재까지)</div>
+        <div class="expr-example-zh">自去年上市<strong>以来</strong>，这款药一直非常热销。</div>
+        <div class="expr-example-ko">작년 출시 이래로, 이 약은 줄곧 매우 잘 팔리고 있다.</div>
+      </div>
+
+      <div class="expr-card">
+        <div class="expr-chip">대조 구문</div>
+        <div class="expr-pattern">不是为了 A，而是为了 B</div>
+        <div class="expr-meaning">A를 위해서가 아니라 B를 위해서다</div>
+        <div class="expr-example-zh">开处方<strong>不是为了</strong>治疗肥胖，<strong>而是为了</strong>赚钱。</div>
+        <div class="expr-example-ko">처방전을 내주는 것은 비만을 치료하기 위해서가 아니라 돈을 벌기 위해서다.</div>
+      </div>
+
+      <div class="expr-card">
+        <div class="expr-chip">위반 표현</div>
+        <div class="expr-pattern">有悖于… (yǒubèiyú)</div>
+        <div class="expr-meaning">~에 위배되다, ~에 어긋나다</div>
+        <div class="expr-example-zh">这种审美标准<strong>有悖于</strong>健康。</div>
+        <div class="expr-example-ko">이러한 미적 기준은 건康에 어긋난다.</div>
+      </div>
+
+      <div class="expr-card">
+        <div class="expr-chip">성어</div>
+        <div class="expr-pattern">接踵而至 (jiézhǒng'érzhì)</div>
+        <div class="expr-meaning">잇따라 발생하다 (발뒤꿈치를 잇대어 오다)</div>
+        <div class="expr-example-zh">各种不良反应<strong>接踵而至</strong>。</div>
+        <div class="expr-example-ko">각종 부작용이 잇따라 나타났다.</div>
+      </div>
+
+      <div class="expr-card">
+        <div class="expr-chip">거절 표현</div>
+        <div class="expr-pattern">对…说不 (duì…shuōbù)</div>
+        <div class="expr-meaning">~에 대해 '아니오'라고 말하다 (단호히 거절하다)</div>
+        <div class="expr-example-zh">我们要坚决<strong>对</strong>"三无"产品<strong>说不</strong>。</div>
+        <div class="expr-example-ko">우리는 '삼무(무허가)' 제품에 대해 단호히 거절해야 한다.</div>
+      </div>
+
+    </div><!-- /tab-expr -->
+
+    <!-- ========== TAB: QUIZ ========== -->
+    <div class="tab-content" id="tab-quiz">
+
+      <div class="quiz-header">
+        <h3 style="font-size:1rem;font-weight:700;">HSK 형식 연습 문제</h3>
+        <span class="quiz-progress-text" id="quizProgress">1 / 5 문제</span>
+      </div>
+
+      <div id="quiz-container">
+        <!-- Q1 -->
+        <div class="question-card quiz-q" id="q1">
+          <div class="q-num">Question 1</div>
+          <div class="q-text">根据第一段内容，韩国人服用减肥药的主要原因是什么？</div>
+          <div class="option-list">
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">A</span>韩国的肥胖率是全球最高的</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="option-letter">B</span>受到"以瘦为美"的审美标准影响</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">C</span>这种减肥药的价格非常便宜</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">D</span>所有的减肥药都包含在医保范围内</button>
+          </div>
+        </div>
+        <!-- Q2 -->
+        <div class="question-card quiz-q" id="q2" style="display:none">
+          <div class="q-num">Question 2</div>
+          <div class="q-text">关于诺和诺德公司的减肥药，下列哪项描述是正确的？</div>
+          <div class="option-list">
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">A</span>这种药没有任何副作用</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">B</span>医生可以给任何体重的患者开处方</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="option-letter">C</span>这种药在韩国的销售额非常高</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">D</span>韩国政府强制要求所有人都服用</button>
+          </div>
+        </div>
+        <!-- Q3 -->
+        <div class="question-card quiz-q" id="q3" style="display:none">
+          <div class="q-num">Question 3</div>
+          <div class="q-text">南京周女士购买的减肥药声称有什么特点？</div>
+          <div class="option-list">
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">A</span>必须配合大量运动</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">B</span>需要严格控制饮食</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="option-letter">C</span>见效快且安全不反弹</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">D</span>只有普通人吃，明星不吃</button>
+          </div>
+        </div>
+        <!-- Q4 -->
+        <div class="question-card quiz-q" id="q4" style="display:none">
+          <div class="q-num">Question 4</div>
+          <div class="q-text">周女士服药十天后出现了什么情况？</div>
+          <div class="option-list">
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">A</span>身体变得非常健康</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">B</span>体重没有发生任何变化</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">C</span>精神状态变好，不再失眠</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="option-letter">D</span>身体和精神状态都严重恶화</button>
+          </div>
+        </div>
+        <!-- Q5 -->
+        <div class="question-card quiz-q" id="q5" style="display:none">
+          <div class="q-num">Question 5</div>
+          <div class="q-text">警方对消费者提出的建议是什么？</div>
+          <div class="option-list">
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">A</span>尽量购买网络上的特效药</button>
+            <button class="option-btn" onclick="answer(this, true)"><span class="option-letter">B</span>减肥时应坚持科学的原则</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">C</span>只要能瘦，什么药都可以尝试</button>
+            <button class="option-btn" onclick="answer(this, false)"><span class="option-letter">D</span>看到"十天瘦十斤"的广告应立即购买</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result card (hidden initially) -->
+      <div id="quiz-result" style="display:none; text-align:center; padding:40px 20px;">
+        <div style="font-size:3rem; margin-bottom:12px;">🎉</div>
+        <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:8px;">학습 완료!</h3>
+        <p style="color:var(--muted); margin-bottom:20px;">오늘의 연습문제를 모두 풀었습니다.</p>
+        <div style="font-size:2rem; font-weight:900; color:var(--red);" id="scoreDisplay">5 / 5</div>
+        <p style="color:var(--muted); font-size:.85rem; margin-top:4px;">정답</p>
+        <button class="btn-primary" style="margin-top:24px; padding:12px 30px; border-radius:10px;" onclick="resetQuiz()">다시 풀기</button>
+      </div>
+
+      <div class="quiz-nav">
+        <button class="btn-ghost" onclick="prevQ()" id="btnPrev" style="display:none">← 이전</button>
+        <button class="btn-primary" onclick="nextQ()" id="btnNext" style="display:none">다음 →</button>
+      </div>
+
+    </div><!-- /tab-quiz -->
+
+  </div><!-- /right-panel -->
+
+</div><!-- /main-wrap -->
+
+<script>
+  // ===== Tab switching =====
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ===== Full text tab controls =====
+  function toggleFullKo(btn) {
+    const tab = document.getElementById('tab-full');
+    const rows = tab.querySelectorAll('.sentence-row');
+    const anyVisible = [...rows].some(r => r.classList.contains('show-ko'));
+    rows.forEach(r => r.classList.toggle('show-ko', !anyVisible));
+    btn.textContent = anyVisible ? '한국어 번역 토글' : '한국어 번역 숨기기';
+  }
+  function toggleFullAll(show) {
+    document.getElementById('tab-full').querySelectorAll('.sentence-row').forEach(r => r.classList.toggle('show-ko', show));
+  }
+
+  // ===== Script controls =====
+  let translationVisible = false;
+  function toggleTranslation(btn) {
+    translationVisible = !translationVisible;
+    document.querySelectorAll('.sentence-row').forEach(row => {
+      row.classList.toggle('show-ko', translationVisible);
+    });
+    btn.textContent = translationVisible ? '한국어 번역 숨기기' : '한국어 번역 토글';
+  }
+  function highlightAll() {
+    document.querySelectorAll('.sentence-row').forEach(r => r.classList.add('highlight', 'show-ko'));
+  }
+  function clearHighlight() {
+    document.querySelectorAll('.sentence-row').forEach(r => r.classList.remove('highlight', 'show-ko'));
+    translationVisible = false;
+  }
+
+  // ===== Vocab modes =====
+  function setVocabMode(mode, btn) {
+    document.querySelectorAll('.vocab-mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('vocab-card-mode').style.display = mode === 'card' ? '' : 'none';
+    document.getElementById('vocab-list-mode').style.display = mode === 'list' ? '' : 'none';
+    document.getElementById('vocab-hide-mode').style.display = mode === 'hide' ? '' : 'none';
+    if (mode === 'hide') buildHideTable();
+  }
+
+  const vocabData = [
+    ['肥胖率','féipànglǜ','비만율'],
+    ['以…为美','yǐ…wéiměi','~을 아름다움으로 여기다'],
+    ['监管','jiānguǎn','감독 및 관리'],
+    ['热销','rèxiāo','불티나게 팔리다'],
+    ['副作用','fùzuòyòng','부작용'],
+    ['处方','chǔfāng','처방(전)'],
+    ['并发症','bìngfāzhèng','합병증'],
+    ['大行其道','dàxíngqídào','크게 유행하다'],
+    ['眼花缭乱','yǎnhuāliáoluàn','눈이 어지럽다'],
+    ['一言难尽','yīyánnánjìn','한마디로 다 말하기 어렵다'],
+    ['警惕','jǐngtì','경계하다, 주의하다'],
+  ];
+
+  function buildHideTable() {
+    const tbody = document.getElementById('hide-tbody');
+    tbody.innerHTML = '';
+    vocabData.forEach(([zh, pinyin, ko]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="zh-bold">${zh}</td><td class="pinyin-cell">${pinyin}</td><td><span style="cursor:pointer;color:var(--muted);user-select:none;" onclick="this.textContent=this.textContent==='••••'?'${ko}':'••••'">••••</span></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ===== Quiz =====
+  let currentQ = 1;
+  let score = 0;
+  const totalQ = 5;
+
+  function answer(btn, isCorrect) {
+    const card = btn.closest('.question-card');
+    card.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (isCorrect) {
+      score++;
+      btn.querySelector('.option-letter').textContent = '✓';
+    } else {
+      btn.querySelector('.option-letter').textContent = '✗';
+      // show correct
+      card.querySelectorAll('.option-btn').forEach(b => {
+        const events = b.getAttribute('onclick');
+        if (events && events.includes('true')) b.classList.add('correct');
+      });
+    }
+    document.getElementById(currentQ < totalQ ? 'btnNext' : 'btnNext').style.display = '';
+    document.getElementById('btnNext').textContent = currentQ < totalQ ? '다음 →' : '결과 보기';
+    document.getElementById('btnNext').style.display = '';
+    if (currentQ > 1) document.getElementById('btnPrev').style.display = '';
+  }
+
+  function nextQ() {
+    if (currentQ < totalQ) {
+      document.getElementById('q' + currentQ).style.display = 'none';
+      currentQ++;
+      document.getElementById('q' + currentQ).style.display = '';
+      document.getElementById('quizProgress').textContent = currentQ + ' / ' + totalQ + ' 문제';
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = '';
+    } else {
+      // show result
+      document.getElementById('quiz-container').style.display = 'none';
+      document.getElementById('quiz-result').style.display = '';
+      document.getElementById('scoreDisplay').textContent = score + ' / ' + totalQ;
+      document.getElementById('btnNext').style.display = 'none';
+      document.getElementById('btnPrev').style.display = 'none';
+      // update progress
+      document.getElementById('progressPct').textContent = '100%';
+      document.getElementById('progressBar').style.width = '100%';
+    }
+  }
+
+  function prevQ() {
+    if (currentQ > 1) {
+      document.getElementById('q' + currentQ).style.display = 'none';
+      currentQ--;
+      document.getElementById('q' + currentQ).style.display = '';
+      document.getElementById('quizProgress').textContent = currentQ + ' / ' + totalQ + ' 문제';
+      if (currentQ === 1) document.getElementById('btnPrev').style.display = 'none';
+    }
+  }
+
+  function resetQuiz() {
+    score = 0; currentQ = 1;
+    document.getElementById('quiz-result').style.display = 'none';
+    document.getElementById('quiz-container').style.display = '';
+    document.querySelectorAll('.quiz-q').forEach(q => q.style.display = 'none');
+    document.getElementById('q1').style.display = '';
+    document.querySelectorAll('.option-btn').forEach(b => { b.disabled = false; b.classList.remove('correct','wrong'); });
+    document.querySelectorAll('.option-letter').forEach((l, i) => l.textContent = ['A','B','C','D'][i % 4]);
+    document.getElementById('quizProgress').textContent = '1 / 5 문제';
+    document.getElementById('btnNext').style.display = 'none';
+    document.getElementById('btnPrev').style.display = 'none';
+    document.getElementById('progressPct').textContent = '40%';
+    document.getElementById('progressBar').style.width = '40%';
+  }
+
+  // ===== Date nav =====
+  const days = ['일','월','화','수','목','금','토'];
+  let current = new Date(2026, 5, 7);
+  function changeDay(d) {
+    current.setDate(current.getDate() + d);
+    const wd = days[current.getDay()];
+    document.getElementById('dateDisplay').textContent =
+      `${current.getFullYear()}년 ${current.getMonth()+1}월 ${current.getDate()}일 (${wd})`;
+  }
+</script>
+</body>
+</html>

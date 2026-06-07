@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JT's Study Hub</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0F1117;
+      --surface: #1A1D27;
+      --surface2: #22263A;
+      --border: rgba(255,255,255,.08);
+      --text: #F0F2F8;
+      --muted: #8890A4;
+      --accent-zh: #E53E3E;   /* Chinese — Red */
+      --accent-code: #6C63FF; /* Vibe Coding — Purple */
+      --accent-en: #2B9BE8;   /* English — Blue */
+      --accent-jp: #F6AD55;   /* Japanese — Amber */
+      --gold: #F5A623;
+      --radius: 16px;
+      --glow-zh:   0 0 40px rgba(229,62,62,.15);
+      --glow-code: 0 0 40px rgba(108,99,255,.15);
+      --glow-en:   0 0 40px rgba(43,155,232,.15);
+      --glow-jp:   0 0 40px rgba(246,173,85,.15);
+    }
+    body {
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,17,23,.85);
+    }
+    .logo { font-size: 1.15rem; font-weight: 800; letter-spacing: -.3px; }
+    .logo span { color: var(--gold); }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .streak-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(245,166,35,.12);
+      border: 1px solid rgba(245,166,35,.3);
+      border-radius: 999px; padding: 5px 14px;
+      font-size: .82rem; font-weight: 600; color: var(--gold);
+    }
+    .date-pill {
+      font-size: .8rem; color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 5px 14px; border-radius: 999px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: 72px 40px 48px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(108,99,255,.08) 0%, transparent 70%);
+    }
+    .hero-greeting { font-size: .85rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 30%, var(--muted));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 14px;
+    }
+    .hero p { font-size: 1rem; color: var(--muted); max-width: 480px; margin: 0 auto 32px; line-height: 1.7; }
+    .hero-stats { display: flex; justify-content: center; gap: 32px; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 1.8rem; font-weight: 900; }
+    .hero-stat .lbl { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+    /* ===== SECTION TITLE ===== */
+    .section { max-width: 1200px; margin: 0 auto; padding: 0 40px 60px; }
+    .section-title {
+      font-size: .75rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ===== STUDY CARDS GRID ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 48px;
+    }
+    .study-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      position: relative; overflow: hidden;
+      text-decoration: none; color: inherit; display: block;
+    }
+    .study-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity .2s;
+    }
+    .study-card:hover { transform: translateY(-4px); }
+    .study-card.zh { border-top: 3px solid var(--accent-zh); }
+    .study-card.zh:hover { box-shadow: var(--glow-zh); border-color: var(--accent-zh); }
+    .study-card.code { border-top: 3px solid var(--accent-code); }
+    .study-card.code:hover { box-shadow: var(--glow-code); border-color: var(--accent-code); }
+    .study-card.en { border-top: 3px solid var(--accent-en); }
+    .study-card.en:hover { box-shadow: var(--glow-en); border-color: var(--accent-en); }
+    .study-card.jp { border-top: 3px solid var(--accent-jp); }
+    .study-card.jp:hover { box-shadow: var(--glow-jp); border-color: var(--accent-jp); }
+
+    .card-icon { font-size: 2rem; margin-bottom: 14px; }
+    .card-lang { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .card-lang.zh { color: var(--accent-zh); }
+    .card-lang.code { color: var(--accent-code); }
+    .card-lang.en { color: var(--accent-en); }
+    .card-lang.jp { color: var(--accent-jp); }
+    .card-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+    .card-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; }
+    .card-progress { font-size: .78rem; color: var(--muted); }
+    .card-progress strong { color: var(--text); }
+    .card-go { font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 8px; border: none; cursor: pointer; transition: all .2s; }
+    .card-go.zh { background: rgba(229,62,62,.15); color: var(--accent-zh); }
+    .card-go.zh:hover { background: var(--accent-zh); color: #fff; }
+    .card-go.code { background: rgba(108,99,255,.15); color: var(--accent-code); }
+    .card-go.code:hover { background: var(--accent-code); color: #fff; }
+    .card-go.en { background: rgba(43,155,232,.15); color: var(--accent-en); }
+    .card-go.en:hover { background: var(--accent-en); color: #fff; }
+    .card-go.jp { background: rgba(246,173,85,.15); color: var(--accent-jp); }
+    .card-go.jp:hover { background: var(--accent-jp); color: #fff; }
+
+    .mini-bar { height: 3px; background: var(--surface2); border-radius: 999px; margin: 14px 0 18px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; border-radius: 999px; }
+    .mini-bar-fill.zh { background: var(--accent-zh); }
+    .mini-bar-fill.code { background: var(--accent-code); }
+    .mini-bar-fill.en { background: var(--accent-en); }
+    .mini-bar-fill.jp { background: var(--accent-jp); }
+
+    /* ===== TODAY'S CHINESE NEWS ===== */
+    .news-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+    .news-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(90deg, rgba(229,62,62,.06), transparent);
+    }
+    .news-header-left { display: flex; align-items: center; gap: 12px; }
+    .news-badge {
+      background: var(--accent-zh); color: #fff;
+      font-size: .7rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .news-header h2 { font-size: 1rem; font-weight: 700; }
+    .news-auto-badge {
+      display: flex; align-items: center; gap: 5px;
+      font-size: .75rem; color: var(--muted);
+      background: var(--surface2); padding: 4px 12px; border-radius: 999px;
+    }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+
+    .news-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    .news-article {
+      padding: 22px 24px;
+      border-right: 1px solid var(--border);
+      transition: background .2s; cursor: pointer;
+    }
+    .news-article:last-child { border-right: none; }
+    .news-article:hover { background: var(--surface2); }
+    .news-article.featured { grid-column: span 1; background: rgba(229,62,62,.04); }
+    .article-date { font-size: .72rem; color: var(--muted); margin-bottom: 8px; }
+    .article-date .dot { color: var(--accent-zh); margin-right: 6px; }
+    .article-title-zh { font-size: 1rem; font-weight: 700; line-height: 1.5; margin-bottom: 6px; }
+    .article-title-ko { font-size: .8rem; color: var(--muted); line-height: 1.5; margin-bottom: 14px; }
+    .article-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .atag {
+      font-size: .68rem; font-weight: 600; padding: 2px 8px;
+      border-radius: 999px; border: 1px solid var(--border); color: var(--muted);
+    }
+    .article-stats { display: flex; gap: 14px; font-size: .75rem; color: var(--muted); }
+    .article-stats span strong { color: var(--text); }
+    .study-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 14px;
+      font-size: .78rem; font-weight: 600;
+      color: var(--accent-zh);
+      background: rgba(229,62,62,.1);
+      padding: 6px 14px; border-radius: 8px;
+      border: none; cursor: pointer; transition: all .2s;
+    }
+    .study-cta:hover { background: var(--accent-zh); color: #fff; }
+
+    /* ===== WEEKLY SCHEDULE ===== */
+    .week-row {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
+    }
+    .day-cell {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 10px; text-align: center;
+      cursor: pointer; transition: all .2s;
+    }
+    .day-cell.today { border-color: var(--accent-zh); background: rgba(229,62,62,.06); }
+    .day-cell.has-video { border-top: 2px solid var(--accent-zh); }
+    .day-cell.no-content { opacity: .4; cursor: default; }
+    .day-cell:hover:not(.no-content) { background: var(--surface2); }
+    .day-name { font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+    .day-date { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+    .day-cell.today .day-date { color: var(--accent-zh); }
+    .day-icon { font-size: .85rem; }
+    .day-label { font-size: .65rem; color: var(--muted); margin-top: 4px; }
+    .day-cell.has-video .day-icon::after { content: ''; display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--accent-zh); margin: 4px auto 0; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center; padding: 32px;
+      border-top: 1px solid var(--border);
+      font-size: .8rem; color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      nav, .hero, .section { padding-left: 20px; padding-right: 20px; }
+      .news-grid { grid-template-columns: 1fr; }
+      .news-article { border-right: none; border-bottom: 1px solid var(--border); }
+      .week-row { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">JT's <span>Study Hub</span></div>
+  <div class="nav-right">
+    <div class="streak-pill">🔥 12일 연속</div>
+    <div class="date-pill" id="todayDate">2026년 6월 7일 (토)</div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-greeting">Welcome back, 조정택</div>
+  <h1>오늘도 한 걸음씩,<br/>꾸준히 성장 중</h1>
+  <p>중국어 · 영어 · 일본어 · Vibe Coding<br/>매일의 학습이 쌓여 실력이 됩니다</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num" style="color:var(--accent-zh)">87</div>
+      <div class="lbl">학습일</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num" style="color:var(--accent-code)">342</div>
+      <div class="lbl">습득 단어</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num" style="color:var(--accent-en)">12</div>
+      <div class="lbl">🔥 스트릭</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num" style="color:var(--accent-jp)">24</div>
+      <div class="lbl">완료 영상</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN SECTION -->
+<div class="section">
+
+  <!-- Study Cards -->
+  <div class="section-title">학습 과목</div>
+  <div class="cards-grid">
+
+    <a class="study-card zh" href="chinese-study.html">
+      <div class="card-icon">🇨🇳</div>
+      <div class="card-lang zh">Chinese · 중국어</div>
+      <div class="card-title">뉴스로 배우는 실용 중국어</div>
+      <div class="card-desc">매일 인민일보·CCTV 기사로 단어, 표현, 문법을 학습합니다</div>
+      <div class="mini-bar"><div class="mini-bar-fill zh" style="width:72%"></div></div>
+      <div class="card-meta">
+        <div class="card-progress">이번 주 <strong>5/7</strong> 완료</div>
+        <button class="card-go zh" onclick="location.href='chinese-study.html'">오늘 학습 →</button>
+      </div>
+    </a>
+
+    <a class="study-card code" href="#">
+      <div class="card-icon">💻</div>
+      <div class="card-lang code">Vibe Coding</div>
+      <div class="card-title">AI와 함께하는 실전 코딩</div>
+      <div class="card-desc">Claude와 함께 웹앱, 자동화 스크립트, 프로젝트를 빌드합니다</div>
+      <div class="mini-bar"><div class="mini-bar-fill code" style="width:55%"></div></div>
+      <div class="card-meta">
+        <div class="card-progress">프로젝트 <strong>3/6</strong> 진행</div>
+        <button class="card-go code">이동 →</button>
+      </div>
+    </a>
+
+    <a class="study-card en" href="#">
+      <div class="card-icon">🇺🇸</div>
+      <div class="card-lang en">English · 영어</div>
+      <div class="card-title">비즈니스 영어 & 뉴스 리딩</div>
+      <div class="card-desc">WSJ, BBC 기사 기반으로 비즈니스 표현과 논설문 독해를 학습합니다</div>
+      <div class="mini-bar"><div class="mini-bar-fill en" style="width:40%"></div></div>
+      <div class="card-meta">
+        <div class="card-progress">이번 주 <strong>3/7</strong> 완료</div>
+        <button class="card-go en">이동 →</button>
+      </div>
+    </a>
+
+    <a class="study-card jp" href="#">
+      <div class="card-icon">🇯🇵</div>
+      <div class="card-lang jp">Japanese · 일본어</div>
+      <div class="card-title">일상 일본어 & JLPT 준비</div>
+      <div class="card-desc">NHK Web Easy 기사와 드라마 스크립트로 자연스러운 일본어를 익힙니다</div>
+      <div class="mini-bar"><div class="mini-bar-fill jp" style="width:28%"></div></div>
+      <div class="card-meta">
+        <div class="card-progress">이번 주 <strong>2/7</strong> 완료</div>
+        <button class="card-go jp">이동 →</button>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Today's Chinese News -->
+  <div class="section-title">오늘의 중국어 뉴스 — 자동 업데이트</div>
+  <div class="news-panel">
+    <div class="news-header">
+      <div class="news-header-left">
+        <span class="news-badge">Daily Auto</span>
+        <h2>매일 자동 생성되는 학습 기사</h2>
+      </div>
+      <div class="news-auto-badge">
+        <div class="pulse"></div>
+        오늘 07:00 업데이트됨
+      </div>
+    </div>
+    <div class="news-grid">
+
+      <!-- Featured -->
+      <div class="news-article featured" onclick="location.href='chinese-study.html'">
+        <div class="article-date"><span class="dot">●</span>2026.06.07 · CCTV 뉴스 · 오늘의 학습</div>
+        <div class="article-title-zh">韩国与中国减肥药热潮与乱象</div>
+        <div class="article-title-ko">한국과 중국의 다이어트 약 열풍과 실태</div>
+        <div class="article-tags">
+          <span class="atag">사회</span>
+          <span class="atag">건강</span>
+          <span class="atag">B1-B2</span>
+          <span class="atag">📺 영상 있음</span>
+        </div>
+        <div class="article-stats">
+          <span>단어 <strong>11</strong></span>
+          <span>표현 <strong>5</strong></span>
+          <span>문제 <strong>5</strong></span>
+        </div>
+        <button class="study-cta">지금 학습하기 →</button>
+      </div>
+
+      <!-- Previous 1 -->
+      <div class="news-article">
+        <div class="article-date"><span class="dot">●</span>2026.06.06 · 人民日报</div>
+        <div class="article-title-zh">中国新能源汽车出口创历史新高</div>
+        <div class="article-title-ko">중국 신에너지 자동차 수출 사상 최고치</div>
+        <div class="article-tags">
+          <span class="atag">경제</span>
+          <span class="atag">산업</span>
+          <span class="atag">B2</span>
+          <span class="atag">📄 텍스트</span>
+        </div>
+        <div class="article-stats">
+          <span>단어 <strong>13</strong></span>
+          <span>표현 <strong>4</strong></span>
+          <span>문제 <strong>5</strong></span>
+        </div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:14px;">✅ 학습 완료</div>
+      </div>
+
+      <!-- Previous 2 -->
+      <div class="news-article">
+        <div class="article-date"><span class="dot">●</span>2026.06.05 · 新华社</div>
+        <div class="article-title-zh">人工智能时代的就业市场变化</div>
+        <div class="article-title-ko">AI 시대 취업 시장의 변화</div>
+        <div class="article-tags">
+          <span class="atag">기술</span>
+          <span class="atag">사회</span>
+          <span class="atag">B1</span>
+          <span class="atag">📺 영상 있음</span>
+        </div>
+        <div class="article-stats">
+          <span>단어 <strong>9</strong></span>
+          <span>표현 <strong>6</strong></span>
+          <span>문제 <strong>5</strong></span>
+        </div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:14px;">✅ 학습 완료</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Weekly Calendar -->
+  <div class="section-title">이번 주 학습 캘린더</div>
+  <div class="week-row">
+    <div class="day-cell">
+      <div class="day-name">Mon</div>
+      <div class="day-date">2</div>
+      <div class="day-icon">📄</div>
+      <div class="day-label">텍스트</div>
+    </div>
+    <div class="day-cell has-video">
+      <div class="day-name">Tue</div>
+      <div class="day-date">3</div>
+      <div class="day-icon">📺</div>
+      <div class="day-label">영상+기사</div>
+    </div>
+    <div class="day-cell">
+      <div class="day-name">Wed</div>
+      <div class="day-date">4</div>
+      <div class="day-icon">📄</div>
+      <div class="day-label">텍스트</div>
+    </div>
+    <div class="day-cell has-video">
+      <div class="day-name">Thu</div>
+      <div class="day-date">5</div>
+      <div class="day-icon">📺</div>
+      <div class="day-label">영상+기사</div>
+    </div>
+    <div class="day-cell">
+      <div class="day-name">Fri</div>
+      <div class="day-date">6</div>
+      <div class="day-icon">📄</div>
+      <div class="day-label">텍스트</div>
+    </div>
+    <div class="day-cell today has-video">
+      <div class="day-name">Sat</div>
+      <div class="day-date">7</div>
+      <div class="day-icon">📺</div>
+      <div class="day-label">오늘 · 학습 중</div>
+    </div>
+    <div class="day-cell no-content">
+      <div class="day-name">Sun</div>
+      <div class="day-date">8</div>
+      <div class="day-icon">🔒</div>
+      <div class="day-label">업데이트 예정</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  JT's Study Hub · 매일 자동 업데이트 · Powered by Claude AI
+</footer>
+
+<script>
+  const d = new Date(2026, 5, 7);
+  const days = ['일','월','화','수','목','금','토'];
+  document.getElementById('todayDate').textContent =
+    `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+</script>
+</body>
+</html>
